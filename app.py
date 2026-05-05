@@ -7,15 +7,13 @@ import plotly.express as px
 # -------------------------
 st.set_page_config(page_title="TintBox Analytics", layout="wide")
 
-st.write("VERSION: FINAL FIX V7")
-
 # -------------------------
 # LOAD DATA
 # -------------------------
 df = pd.read_csv("data.csv")
 
 # -------------------------
-# 🔧 DATA CLEANING
+# DATA CLEANING
 # -------------------------
 df.columns = df.columns.str.strip()
 
@@ -29,18 +27,18 @@ df['status'] = df.get('status').fillna("Unknown")
 df = df.dropna(subset=['delay'])
 
 # -------------------------
-# 🎨 MINIMAL CSS (THEME SAFE)
+# MINIMAL PROFESSIONAL CSS
 # -------------------------
 st.markdown("""
 <style>
 section[data-testid="stSidebar"] {
-    background-color: #e6f4ea;
+    background-color: #f5f5f5;
 }
-h1 { color: #1b5e20; }
-h2, h3 { color: #2e7d32; }
-button {
-    background-color: #2e7d32 !important;
-    color: white !important;
+h1 {
+    font-weight: 600;
+}
+h2, h3 {
+    font-weight: 500;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -48,48 +46,43 @@ button {
 # -------------------------
 # HEADER
 # -------------------------
-st.title("📦 TintBox Order Intelligence System")
-st.caption("RTO Optimization | Final Year CSE Project")
-st.markdown("### 📊 Real-time Order Analytics Dashboard")
+st.title("TintBox Order Intelligence Dashboard")
+st.markdown("### Order Analytics and RTO Monitoring")
 
-st.divider()
+st.markdown("---")
 
 # -------------------------
-# SIDEBAR FILTERS (FIXED)
+# SIDEBAR FILTERS
 # -------------------------
-st.sidebar.header("🔍 Filters")
+st.sidebar.header("Filters")
 
-# Clean filter options
 payment_options = sorted(df['payment_type'].dropna().unique())
 risk_options = sorted(df['risk'].dropna().unique())
 
-# Safe multiselect
 payment = st.sidebar.multiselect(
     "Payment Type",
     options=payment_options,
-    default=payment_options if payment_options else []
+    default=payment_options
 )
 
 risk = st.sidebar.multiselect(
     "Risk Level",
     options=risk_options,
-    default=risk_options if risk_options else []
+    default=risk_options
 )
 
-# Safe filtering
 if payment:
     df = df[df['payment_type'].isin(payment)]
 
 if risk:
     df = df[df['risk'].isin(risk)]
 
-# Stop if empty
 if df.empty:
     st.warning("No data available for selected filters")
     st.stop()
 
 # -------------------------
-# KPIs
+# KPI SECTION
 # -------------------------
 total_orders = len(df)
 returned = len(df[df['status'] == 'Returned'])
@@ -100,110 +93,101 @@ col1, col2, col3, col4 = st.columns(4)
 
 col1.metric("Total Orders", total_orders)
 col2.metric("Returned Orders", returned)
-col3.metric("RTO %", f"{rto:.2f}%")
-col4.metric("Avg Delay", f"{avg_delay:.2f} days")
+col3.metric("RTO Percentage", f"{rto:.2f}%")
+col4.metric("Average Delay (days)", f"{avg_delay:.2f}")
 
-st.divider()
+st.markdown("---")
 
 # -------------------------
 # INSIGHTS
 # -------------------------
-st.subheader("📌 Key Insights")
+st.subheader("Key Insights")
 
 if rto > 50:
-    st.error("⚠️ High RTO detected → Immediate intervention required")
+    st.error("High return rate detected. Immediate action recommended.")
 elif rto > 30:
-    st.warning("Moderate RTO → Monitor closely")
+    st.warning("Moderate return rate. Monitor closely.")
 else:
-    st.success("RTO under control")
+    st.success("Return rate is under control.")
 
-st.info("💡 Insight: COD + High Delay = Highest RTO Risk")
+st.info("Observation: Orders with high delay and cash payment show higher return probability.")
 
-st.divider()
+st.markdown("---")
 
 # -------------------------
-# CHARTS (THEME SAFE)
+# CHARTS
 # -------------------------
 colA, colB = st.columns(2)
 
 with colA:
-    try:
-        fig1 = px.bar(
-            df,
-            x="risk",
-            color="risk",
-            title="Risk Distribution",
-            color_discrete_sequence=px.colors.qualitative.Set2
-        )
-        fig1.update_layout(template="plotly")
-        st.plotly_chart(fig1, use_container_width=True)
-    except Exception as e:
-        st.error(f"Chart error: {e}")
+    fig1 = px.bar(
+        df,
+        x="risk",
+        color="risk",
+        title="Risk Distribution",
+        color_discrete_sequence=px.colors.qualitative.Set2
+    )
+    fig1.update_layout(template="plotly")
+    st.plotly_chart(fig1, use_container_width=True)
 
 with colB:
-    try:
-        fig2 = px.histogram(
-            df,
-            x="delay",
-            title="Delay Distribution",
-            color_discrete_sequence=px.colors.qualitative.Set2
-        )
-        fig2.update_layout(template="plotly")
-        st.plotly_chart(fig2, use_container_width=True)
-    except Exception as e:
-        st.error(f"Chart error: {e}")
+    fig2 = px.histogram(
+        df,
+        x="delay",
+        title="Delay Distribution",
+        color_discrete_sequence=px.colors.qualitative.Set2
+    )
+    fig2.update_layout(template="plotly")
+    st.plotly_chart(fig2, use_container_width=True)
 
-st.divider()
+st.markdown("---")
 
 # -------------------------
 # PAYMENT ANALYSIS
 # -------------------------
-st.subheader("💳 Payment vs RTO")
+st.subheader("Payment Type vs Returns")
 
-try:
-    fig3 = px.histogram(
-        df,
-        x="payment_type",
-        color="status",
-        barmode="group",
-        color_discrete_sequence=px.colors.qualitative.Set2
-    )
-    fig3.update_layout(template="plotly")
-    st.plotly_chart(fig3, use_container_width=True)
-except Exception as e:
-    st.error(f"Chart error: {e}")
+fig3 = px.histogram(
+    df,
+    x="payment_type",
+    color="status",
+    barmode="group",
+    color_discrete_sequence=px.colors.qualitative.Set2
+)
+fig3.update_layout(template="plotly")
 
-st.divider()
+st.plotly_chart(fig3, use_container_width=True)
+
+st.markdown("---")
 
 # -------------------------
 # HIGH RISK ORDERS
 # -------------------------
-st.subheader("🚨 High Risk Orders")
+st.subheader("High Risk Orders")
+
 st.dataframe(df[df['risk'] == 'High'].head(20))
 
-st.divider()
+st.markdown("---")
 
 # -------------------------
 # ACTION DISTRIBUTION
 # -------------------------
-st.subheader("🤖 Decision Engine Output")
+st.subheader("Recommended Actions Distribution")
 
-try:
-    fig4 = px.pie(
-        df,
-        names="action",
-        title="Suggested Actions",
-        color_discrete_sequence=px.colors.qualitative.Set2
-    )
-    fig4.update_layout(template="plotly")
-    st.plotly_chart(fig4, use_container_width=True)
-except Exception as e:
-    st.error(f"Chart error: {e}")
+fig4 = px.pie(
+    df,
+    names="action",
+    title="Decision Engine Output",
+    color_discrete_sequence=px.colors.qualitative.Set2
+)
+fig4.update_layout(template="plotly")
 
-st.divider()
+st.plotly_chart(fig4, use_container_width=True)
+
+st.markdown("---")
 
 # -------------------------
 # RAW DATA
 # -------------------------
-with st.expander("📋 View Full Dataset"):
+with st.expander("View Full Dataset"):
     st.dataframe(df)
