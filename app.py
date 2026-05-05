@@ -2,24 +2,21 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-st.write("VERSION: FINAL FIX V3")
-
 # -------------------------
-# PAGE CONFIG
+# PAGE CONFIG (MUST BE FIRST)
 # -------------------------
 st.set_page_config(page_title="TintBox Analytics", layout="wide")
+
+st.write("VERSION: FINAL FIX V4")
 
 # -------------------------
 # LOAD & CLEAN DATA
 # -------------------------
 df = pd.read_csv("data.csv")
 
-# 🔧 DATA CLEANING
 df = df.dropna()
-
 df['delay'] = pd.to_numeric(df['delay'], errors='coerce')
 df['attempts'] = pd.to_numeric(df['attempts'], errors='coerce')
-
 df = df.dropna(subset=['delay'])
 
 # -------------------------
@@ -39,8 +36,6 @@ h2, h3 { color: #2e7d32; }
     padding: 15px;
     border: 1px solid #e0e0e0;
 }
-
-.plot-container { background-color: white !important; }
 
 button {
     background-color: #2e7d32 !important;
@@ -65,34 +60,27 @@ st.divider()
 # -------------------------
 st.sidebar.header("🔍 Filters")
 
-# Payment filter
-payment_options = df['payment_type'].dropna().unique()
 payment = st.sidebar.multiselect(
     "Payment Type",
-    options=payment_options,
-    default=payment_options
+    options=df['payment_type'].dropna().unique(),
+    default=df['payment_type'].dropna().unique()
 )
 
-# Risk filter
-risk_options = df['risk'].dropna().unique()
 risk = st.sidebar.multiselect(
     "Risk Level",
-    options=risk_options,
-    default=risk_options
+    options=df['risk'].dropna().unique(),
+    default=df['risk'].dropna().unique()
 )
 
-# Apply filters
 df = df[
     (df['payment_type'].isin(payment)) &
     (df['risk'].isin(risk))
 ]
 
-# 🚨 STOP EARLY IF NO DATA
 if df.empty:
     st.warning("No data available for selected filters")
     st.stop()
 
-# Optional: sort for better charts
 df = df.sort_values(by="delay")
 
 # -------------------------
@@ -145,7 +133,11 @@ with colA:
             "Low": "#43a047"
         }
     )
-    fig1.update_layout(plot_bgcolor="white", paper_bgcolor="white")
+    fig1.update_layout(
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        font=dict(color="black")
+    )
     st.plotly_chart(fig1, use_container_width=True)
 
 with colB:
@@ -155,7 +147,11 @@ with colB:
         title="Delay Distribution",
         color_discrete_sequence=["#2e7d32"]
     )
-    fig2.update_layout(plot_bgcolor="white", paper_bgcolor="white")
+    fig2.update_layout(
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        font=dict(color="black")
+    )
     st.plotly_chart(fig2, use_container_width=True)
 
 st.divider()
@@ -175,7 +171,12 @@ fig3 = px.histogram(
         "Delivered": "#43a047"
     }
 )
-fig3.update_layout(plot_bgcolor="white", paper_bgcolor="white")
+fig3.update_layout(
+    plot_bgcolor="white",
+    paper_bgcolor="white",
+    font=dict(color="black")
+)
+
 st.plotly_chart(fig3, use_container_width=True)
 
 st.divider()
@@ -199,6 +200,7 @@ fig4 = px.pie(
     title="Suggested Actions",
     color_discrete_sequence=px.colors.qualitative.Set2
 )
+
 st.plotly_chart(fig4, use_container_width=True)
 
 st.divider()
