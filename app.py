@@ -7,16 +7,28 @@ import plotly.express as px
 # -------------------------
 st.set_page_config(page_title="TintBox Analytics", layout="wide")
 
-st.write("VERSION: FINAL FIX V4")
+st.write("VERSION: FINAL FIX V5")
 
 # -------------------------
-# LOAD & CLEAN DATA
+# LOAD DATA
 # -------------------------
 df = pd.read_csv("data.csv")
 
-df = df.dropna()
-df['delay'] = pd.to_numeric(df['delay'], errors='coerce')
-df['attempts'] = pd.to_numeric(df['attempts'], errors='coerce')
+# -------------------------
+# 🔧 SAFE DATA CLEANING (FIXED)
+# -------------------------
+df.columns = df.columns.str.strip()
+
+# Convert numeric columns safely
+df['delay'] = pd.to_numeric(df.get('delay'), errors='coerce')
+df['attempts'] = pd.to_numeric(df.get('attempts'), errors='coerce')
+
+# Fill missing categorical values (IMPORTANT)
+df['risk'] = df.get('risk').fillna("Unknown")
+df['payment_type'] = df.get('payment_type').fillna("Unknown")
+df['status'] = df.get('status').fillna("Unknown")
+
+# Remove only rows where delay is invalid
 df = df.dropna(subset=['delay'])
 
 # -------------------------
@@ -62,14 +74,14 @@ st.sidebar.header("🔍 Filters")
 
 payment = st.sidebar.multiselect(
     "Payment Type",
-    options=df['payment_type'].dropna().unique(),
-    default=df['payment_type'].dropna().unique()
+    options=df['payment_type'].unique(),
+    default=df['payment_type'].unique()
 )
 
 risk = st.sidebar.multiselect(
     "Risk Level",
-    options=df['risk'].dropna().unique(),
-    default=df['risk'].dropna().unique()
+    options=df['risk'].unique(),
+    default=df['risk'].unique()
 )
 
 df = df[
@@ -81,14 +93,12 @@ if df.empty:
     st.warning("No data available for selected filters")
     st.stop()
 
-df = df.sort_values(by="delay")
-
 # -------------------------
 # KPIs
 # -------------------------
 total_orders = len(df)
 returned = len(df[df['status'] == 'Returned'])
-rto = (returned / total_orders) * 100
+rto = (returned / total_orders) * 100 if total_orders > 0 else 0
 avg_delay = df['delay'].mean()
 
 col1, col2, col3, col4 = st.columns(4)
@@ -117,42 +127,23 @@ st.info("💡 Insight: COD + High Delay = Highest RTO Risk")
 st.divider()
 
 # -------------------------
-# CHARTS
+# CHARTS (SAFE VERSION)
 # -------------------------
 colA, colB = st.columns(2)
 
 with colA:
-    fig1 = px.bar(
-        df,
-        x="risk",
-        color="risk",
-        title="Risk Distribution",
-        color_discrete_map={
-            "High": "#e53935",
-            "Medium": "#fb8c00",
-            "Low": "#43a047"
-        }
-    )
-    fig1.update_layout(
-        plot_bgcolor="white",
-        paper_bgcolor="white",
-        font=dict(color="black")
-    )
-    st.plotly_chart(fig1, use_container_width=True)
+    try:
+        fig1 = px.bar(df, x="risk", color="risk", title="Risk Distribution")
+        st.plotly_chart(fig1, use_container_width=True)
+    except Exception as e:
+        st.error(f"Chart error: {e}")
 
 with colB:
-    fig2 = px.histogram(
-        df,
-        x="delay",
-        title="Delay Distribution",
-        color_discrete_sequence=["#2e7d32"]
-    )
-    fig2.update_layout(
-        plot_bgcolor="white",
-        paper_bgcolor="white",
-        font=dict(color="black")
-    )
-    st.plotly_chart(fig2, use_container_width=True)
+    try:
+        fig2 = px.histogram(df, x="delay", title="Delay Distribution")
+        st.plotly_chart(fig2, use_container_width=True)
+    except Exception as e:
+        st.error(f"Chart error: {e}")
 
 st.divider()
 
@@ -161,23 +152,11 @@ st.divider()
 # -------------------------
 st.subheader("💳 Payment vs RTO")
 
-fig3 = px.histogram(
-    df,
-    x="payment_type",
-    color="status",
-    barmode="group",
-    color_discrete_map={
-        "Returned": "#e53935",
-        "Delivered": "#43a047"
-    }
-)
-fig3.update_layout(
-    plot_bgcolor="white",
-    paper_bgcolor="white",
-    font=dict(color="black")
-)
-
-st.plotly_chart(fig3, use_container_width=True)
+try:
+    fig3 = px.histogram(df, x="payment_type", color="status", barmode="group")
+    st.plotly_chart(fig3, use_container_width=True)
+except Exception as e:
+    st.error(f"Chart error: {e}")
 
 st.divider()
 
@@ -194,14 +173,11 @@ st.divider()
 # -------------------------
 st.subheader("🤖 Decision Engine Output")
 
-fig4 = px.pie(
-    df,
-    names="action",
-    title="Suggested Actions",
-    color_discrete_sequence=px.colors.qualitative.Set2
-)
-
-st.plotly_chart(fig4, use_container_width=True)
+try:
+    fig4 = px.pie(df, names="action", title="Suggested Actions")
+    st.plotly_chart(fig4, use_container_width=True)
+except Exception as e:
+    st.error(f"Chart error: {e}")
 
 st.divider()
 
