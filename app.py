@@ -8,9 +8,17 @@ import plotly.express as px
 st.set_page_config(page_title="TintBox Analytics", layout="wide")
 
 # -------------------------
-# LOAD DATA
+# LOAD & CLEAN DATA
 # -------------------------
 df = pd.read_csv("data.csv")
+
+# 🔧 DATA CLEANING
+df = df.dropna()
+
+df['delay'] = pd.to_numeric(df['delay'], errors='coerce')
+df['attempts'] = pd.to_numeric(df['attempts'], errors='coerce')
+
+df = df.dropna(subset=['delay'])
 
 # -------------------------
 # 🎨 UI STYLING
@@ -63,7 +71,7 @@ payment = st.sidebar.multiselect(
     default=payment_options
 )
 
-# Risk filter (FIXED)
+# Risk filter
 risk_options = df['risk'].dropna().unique()
 risk = st.sidebar.multiselect(
     "Risk Level",
@@ -77,12 +85,20 @@ df = df[
     (df['risk'].isin(risk))
 ]
 
+# 🚨 STOP EARLY IF NO DATA
+if df.empty:
+    st.warning("No data available for selected filters")
+    st.stop()
+
+# Optional: sort for better charts
+df = df.sort_values(by="delay")
+
 # -------------------------
 # KPIs
 # -------------------------
 total_orders = len(df)
 returned = len(df[df['status'] == 'Returned'])
-rto = (returned / total_orders) * 100 if total_orders > 0 else 0
+rto = (returned / total_orders) * 100
 avg_delay = df['delay'].mean()
 
 col1, col2, col3, col4 = st.columns(4)
