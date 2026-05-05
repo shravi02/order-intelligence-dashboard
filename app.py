@@ -3,11 +3,11 @@ import pandas as pd
 import plotly.express as px
 
 # -------------------------
-# PAGE CONFIG (MUST BE FIRST)
+# PAGE CONFIG
 # -------------------------
 st.set_page_config(page_title="TintBox Analytics", layout="wide")
 
-st.write("VERSION: FINAL FIX V5")
+st.write("VERSION: FINAL FIX V6")
 
 # -------------------------
 # LOAD DATA
@@ -15,46 +15,33 @@ st.write("VERSION: FINAL FIX V5")
 df = pd.read_csv("data.csv")
 
 # -------------------------
-# 🔧 SAFE DATA CLEANING (FIXED)
+# 🔧 DATA CLEANING (SAFE)
 # -------------------------
 df.columns = df.columns.str.strip()
 
-# Convert numeric columns safely
 df['delay'] = pd.to_numeric(df.get('delay'), errors='coerce')
 df['attempts'] = pd.to_numeric(df.get('attempts'), errors='coerce')
 
-# Fill missing categorical values (IMPORTANT)
 df['risk'] = df.get('risk').fillna("Unknown")
 df['payment_type'] = df.get('payment_type').fillna("Unknown")
 df['status'] = df.get('status').fillna("Unknown")
 
-# Remove only rows where delay is invalid
 df = df.dropna(subset=['delay'])
 
 # -------------------------
-# 🎨 UI STYLING
+# 🎨 MINIMAL CSS (THEME SAFE)
 # -------------------------
 st.markdown("""
 <style>
-.stApp { background-color: #f8fafc; }
-section[data-testid="stSidebar"] { background-color: #e6f4ea; }
-
+section[data-testid="stSidebar"] {
+    background-color: #e6f4ea;
+}
 h1 { color: #1b5e20; }
 h2, h3 { color: #2e7d32; }
-
-[data-testid="metric-container"] {
-    background: white;
-    border-radius: 12px;
-    padding: 15px;
-    border: 1px solid #e0e0e0;
-}
-
 button {
     background-color: #2e7d32 !important;
     color: white !important;
 }
-
-[data-testid="stDataFrame"] { background-color: white; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -127,20 +114,33 @@ st.info("💡 Insight: COD + High Delay = Highest RTO Risk")
 st.divider()
 
 # -------------------------
-# CHARTS (SAFE VERSION)
+# CHARTS (THEME ADAPTIVE)
 # -------------------------
 colA, colB = st.columns(2)
 
 with colA:
     try:
-        fig1 = px.bar(df, x="risk", color="risk", title="Risk Distribution")
+        fig1 = px.bar(
+            df,
+            x="risk",
+            color="risk",
+            title="Risk Distribution",
+            color_discrete_sequence=px.colors.qualitative.Set2
+        )
+        fig1.update_layout(template="plotly")
         st.plotly_chart(fig1, use_container_width=True)
     except Exception as e:
         st.error(f"Chart error: {e}")
 
 with colB:
     try:
-        fig2 = px.histogram(df, x="delay", title="Delay Distribution")
+        fig2 = px.histogram(
+            df,
+            x="delay",
+            title="Delay Distribution",
+            color_discrete_sequence=px.colors.qualitative.Set2
+        )
+        fig2.update_layout(template="plotly")
         st.plotly_chart(fig2, use_container_width=True)
     except Exception as e:
         st.error(f"Chart error: {e}")
@@ -153,7 +153,14 @@ st.divider()
 st.subheader("💳 Payment vs RTO")
 
 try:
-    fig3 = px.histogram(df, x="payment_type", color="status", barmode="group")
+    fig3 = px.histogram(
+        df,
+        x="payment_type",
+        color="status",
+        barmode="group",
+        color_discrete_sequence=px.colors.qualitative.Set2
+    )
+    fig3.update_layout(template="plotly")
     st.plotly_chart(fig3, use_container_width=True)
 except Exception as e:
     st.error(f"Chart error: {e}")
@@ -174,7 +181,13 @@ st.divider()
 st.subheader("🤖 Decision Engine Output")
 
 try:
-    fig4 = px.pie(df, names="action", title="Suggested Actions")
+    fig4 = px.pie(
+        df,
+        names="action",
+        title="Suggested Actions",
+        color_discrete_sequence=px.colors.qualitative.Set2
+    )
+    fig4.update_layout(template="plotly")
     st.plotly_chart(fig4, use_container_width=True)
 except Exception as e:
     st.error(f"Chart error: {e}")
