@@ -8,12 +8,12 @@ import plotly.express as px
 st.set_page_config(page_title="TintBox Analytics", layout="wide")
 
 # -------------------------
-# LOAD DATA (FINAL)
+# LOAD DATA
 # -------------------------
 df = pd.read_csv("data.csv")
 
 # -------------------------
-# 🎨 CLEAN UI
+# 🎨 UI STYLING
 # -------------------------
 st.markdown("""
 <style>
@@ -46,32 +46,43 @@ button {
 # -------------------------
 st.title("📦 TintBox Order Intelligence System")
 st.caption("RTO Optimization | Final Year CSE Project")
+st.markdown("### 📊 Real-time Order Analytics Dashboard")
+
+st.divider()
 
 # -------------------------
 # SIDEBAR FILTERS
 # -------------------------
 st.sidebar.header("🔍 Filters")
 
+# Payment filter
+payment_options = df['payment_type'].dropna().unique()
 payment = st.sidebar.multiselect(
     "Payment Type",
-    options=df['payment_type'].unique(),
-    default=df['payment_type'].unique()
+    options=payment_options,
+    default=payment_options
 )
 
+# Risk filter (FIXED)
+risk_options = df['risk'].dropna().unique()
 risk = st.sidebar.multiselect(
     "Risk Level",
-    options=df['risk'].unique(),
-    default=df['risk'].unique()
+    options=risk_options,
+    default=risk_options
 )
 
-df = df[(df['payment_type'].isin(payment)) & (df['risk'].isin(risk))]
+# Apply filters
+df = df[
+    (df['payment_type'].isin(payment)) &
+    (df['risk'].isin(risk))
+]
 
 # -------------------------
 # KPIs
 # -------------------------
 total_orders = len(df)
 returned = len(df[df['status'] == 'Returned'])
-rto = (returned / total_orders) * 100
+rto = (returned / total_orders) * 100 if total_orders > 0 else 0
 avg_delay = df['delay'].mean()
 
 col1, col2, col3, col4 = st.columns(4)
@@ -155,7 +166,6 @@ st.divider()
 # HIGH RISK ORDERS
 # -------------------------
 st.subheader("🚨 High Risk Orders")
-
 st.dataframe(df[df['risk'] == 'High'].head(20))
 
 st.divider()
