@@ -1,0 +1,519 @@
+order_id,customer_id,order_date,delivery_date,payment_type,attempts,status,delay,risk,action,region
+,,,,,,,,,,
+101,1,2026-01-01,2026-01-06,COD,3,Delivered,5,High,Verify Order,North
+102,2,2026-01-02,2026-01-04,Prepaid,1,Delivered,2,Low,Normal,West
+103,1,2026-01-03,2026-01-10,COD,4,Returned,7,High,Verify Order,North
+104,2,2026-01-05,2026-01-12,COD,3,Returned,7,High,Verify Order,West
+105,1,2026-01-06,2026-01-08,Prepaid,1,Delivered,2,Low,Normal,North
+106,2,2026-01-07,2026-01-15,COD,4,Returned,8,High,Verify Order,West
+107,1,2026-01-08,2026-01-10,Prepaid,1,Delivered,2,Low,Normal,North
+108,2,2026-01-09,2026-01-16,COD,5,Returned,7,High,Verify Order,West
+112,2,2026-01-13,2026-01-20,COD,3,Returned,7,High,Verify Order,West
+113,1,2026-01-14,2026-01-16,Prepaid,1,Delivered,2,Low,Normal,North
+114,2,2026-01-15,2026-01-22,COD,4,Returned,7,High,Verify Order,West
+115,1,2026-01-16,2026-01-18,Prepaid,1,Delivered,2,Low,Normal,North
+116,2,2026-01-17,2026-01-25,COD,5,Returned,8,High,Verify Order,West
+117,1,2026-01-18,2026-01-20,Prepaid,1,Delivered,2,Low,Normal,North
+118,2,2026-01-19,2026-01-27,COD,4,Returned,8,High,Verify Order,West
+119,1,2026-01-20,2026-01-22,Prepaid,1,Delivered,2,Low,Normal,North
+120,2,2026-01-21,2026-01-29,COD,5,Returned,8,High,Verify Order,West
+300,2,2026-03-22,2026-03-30,COD,4,Returned,8,High,Verify Order,West
+301,1,2026-02-22,2026-02-28,COD,1,Returned,6,Medium,Prioritize Delivery,North
+302,2,2026-02-25,2026-03-03,Prepaid,1,Delivered,6,Medium,Prioritize Delivery,West
+303,1,2026-01-24,2026-02-02,COD,1,Returned,9,Medium,Prioritize Delivery,North
+304,2,2026-03-17,2026-03-27,COD,3,Returned,10,High,Verify Order,West
+305,2,2026-01-28,2026-01-29,Prepaid,5,Delivered,1,Medium,Prioritize Delivery,West
+306,1,2026-03-28,2026-03-31,Prepaid,4,Returned,3,Medium,Prioritize Delivery,North
+307,2,2026-03-18,2026-03-25,COD,2,Returned,7,Medium,Prioritize Delivery,West
+308,1,2026-01-13,2026-01-22,COD,5,Returned,9,High,Verify Order,North
+309,2,2026-03-14,2026-03-24,COD,3,Returned,10,High,Verify Order,West
+310,2,2026-01-10,2026-01-14,COD,1,Delivered,4,Medium,Prioritize Delivery,West
+311,2,2026-02-25,2026-03-01,Prepaid,5,Delivered,4,Medium,Prioritize Delivery,West
+312,2,2026-03-24,2026-03-29,Prepaid,4,Returned,5,Medium,Prioritize Delivery,West
+313,1,2026-01-14,2026-01-20,Prepaid,4,Returned,6,Medium,Prioritize Delivery,North
+314,2,2026-03-08,2026-03-15,Prepaid,2,Returned,7,Medium,Prioritize Delivery,West
+315,1,2026-02-05,2026-02-11,Prepaid,1,Returned,6,Medium,Prioritize Delivery,North
+316,1,2026-02-26,2026-03-07,COD,4,Returned,9,High,Verify Order,North
+317,2,2026-01-09,2026-01-13,COD,5,Returned,4,Medium,Prioritize Delivery,West
+318,1,2026-02-24,2026-03-01,Prepaid,3,Delivered,5,Medium,Prioritize Delivery,North
+319,1,2026-03-27,2026-04-05,Prepaid,1,Delivered,9,Medium,Prioritize Delivery,North
+320,1,2026-01-29,2026-02-05,Prepaid,4,Returned,7,Medium,Prioritize Delivery,North
+321,1,2026-01-31,2026-02-01,Prepaid,1,Returned,1,Low,Normal,North
+322,2,2026-03-07,2026-03-15,COD,2,Returned,8,Medium,Prioritize Delivery,West
+323,1,2026-03-02,2026-03-08,COD,5,Returned,6,High,Verify Order,North
+324,1,2026-02-11,2026-02-14,COD,1,Returned,3,Low,Normal,North
+325,1,2026-01-31,2026-02-10,COD,3,Returned,10,High,Verify Order,North
+326,1,2026-02-01,2026-02-11,Prepaid,5,Delivered,10,Medium,Prioritize Delivery,North
+327,1,2026-03-20,2026-03-22,Prepaid,4,Delivered,2,Medium,Prioritize Delivery,North
+328,1,2026-03-31,2026-04-03,COD,3,Returned,3,Medium,Prioritize Delivery,North
+329,1,2026-03-19,2026-03-26,COD,2,Returned,7,Medium,Prioritize Delivery,North
+330,2,2026-03-31,2026-04-10,Prepaid,2,Delivered,10,Medium,Prioritize Delivery,West
+331,2,2026-02-09,2026-02-17,COD,2,Returned,8,Medium,Prioritize Delivery,West
+332,2,2026-03-23,2026-03-27,Prepaid,2,Delivered,4,Medium,Prioritize Delivery,West
+333,2,2026-02-10,2026-02-17,COD,4,Returned,7,High,Verify Order,West
+334,1,2026-01-25,2026-02-02,Prepaid,1,Delivered,8,Medium,Prioritize Delivery,North
+335,1,2026-03-24,2026-04-01,COD,1,Returned,8,Medium,Prioritize Delivery,North
+336,1,2026-01-22,2026-01-26,COD,4,Returned,4,Medium,Prioritize Delivery,North
+337,1,2026-03-16,2026-03-23,Prepaid,4,Returned,7,Medium,Prioritize Delivery,North
+338,2,2026-02-14,2026-02-17,COD,4,Returned,3,Medium,Prioritize Delivery,West
+339,1,2026-03-24,2026-03-29,Prepaid,1,Delivered,5,Medium,Prioritize Delivery,North
+340,1,2026-02-20,2026-02-25,Prepaid,2,Returned,5,Medium,Prioritize Delivery,North
+341,2,2026-03-03,2026-03-13,COD,5,Returned,10,High,Verify Order,West
+342,2,2026-02-07,2026-02-11,COD,4,Delivered,4,Medium,Prioritize Delivery,West
+343,2,2026-01-14,2026-01-20,COD,1,Returned,6,Medium,Prioritize Delivery,West
+344,2,2026-02-24,2026-02-28,COD,5,Delivered,4,Medium,Prioritize Delivery,West
+345,2,2026-02-20,2026-02-24,Prepaid,5,Returned,4,Medium,Prioritize Delivery,West
+346,2,2026-02-03,2026-02-09,Prepaid,1,Delivered,6,Medium,Prioritize Delivery,West
+347,1,2026-02-23,2026-03-02,COD,2,Returned,7,Medium,Prioritize Delivery,North
+348,1,2026-01-26,2026-02-03,Prepaid,1,Delivered,8,Medium,Prioritize Delivery,North
+349,2,2026-02-08,2026-02-18,COD,3,Returned,10,High,Verify Order,West
+350,2,2026-01-21,2026-01-24,Prepaid,2,Delivered,3,Low,Normal,West
+351,1,2026-01-01,2026-01-04,COD,1,Delivered,3,Low,Normal,North
+352,2,2026-02-01,2026-02-04,COD,5,Returned,3,Medium,Prioritize Delivery,West
+353,2,2026-01-07,2026-01-13,Prepaid,2,Delivered,6,Medium,Prioritize Delivery,West
+354,2,2026-01-26,2026-01-27,Prepaid,1,Returned,1,Low,Normal,West
+355,2,2026-01-23,2026-02-02,COD,1,Returned,10,Medium,Prioritize Delivery,West
+356,1,2026-01-07,2026-01-09,COD,5,Delivered,2,Medium,Prioritize Delivery,North
+357,1,2026-01-07,2026-01-12,Prepaid,5,Delivered,5,Medium,Prioritize Delivery,North
+358,2,2026-01-23,2026-01-27,COD,5,Returned,4,Medium,Prioritize Delivery,West
+359,2,2026-03-09,2026-03-11,COD,5,Delivered,2,Medium,Prioritize Delivery,West
+360,2,2026-02-23,2026-02-26,Prepaid,3,Delivered,3,Medium,Prioritize Delivery,West
+361,1,2026-02-19,2026-02-25,Prepaid,2,Delivered,6,Medium,Prioritize Delivery,North
+362,2,2026-03-06,2026-03-12,COD,2,Returned,6,Medium,Prioritize Delivery,West
+363,1,2026-03-26,2026-04-03,Prepaid,5,Delivered,8,Medium,Prioritize Delivery,North
+364,1,2026-03-02,2026-03-06,Prepaid,2,Delivered,4,Medium,Prioritize Delivery,North
+365,1,2026-02-23,2026-03-04,Prepaid,2,Delivered,9,Medium,Prioritize Delivery,North
+366,1,2026-01-16,2026-01-24,Prepaid,3,Delivered,8,Medium,Prioritize Delivery,North
+367,1,2026-01-14,2026-01-18,Prepaid,2,Returned,4,Medium,Prioritize Delivery,North
+368,2,2026-02-24,2026-02-26,COD,1,Delivered,2,Low,Normal,West
+369,1,2026-01-12,2026-01-13,COD,4,Delivered,1,Medium,Prioritize Delivery,North
+370,1,2026-02-03,2026-02-09,COD,1,Returned,6,Medium,Prioritize Delivery,North
+371,2,2026-01-13,2026-01-21,Prepaid,1,Returned,8,Medium,Prioritize Delivery,West
+372,1,2026-02-01,2026-02-03,COD,4,Returned,2,Medium,Prioritize Delivery,North
+373,2,2026-02-22,2026-02-27,Prepaid,3,Delivered,5,Medium,Prioritize Delivery,West
+374,1,2026-01-27,2026-02-01,Prepaid,3,Returned,5,Medium,Prioritize Delivery,North
+375,2,2026-03-30,2026-04-03,COD,1,Returned,4,Medium,Prioritize Delivery,West
+376,1,2026-02-21,2026-02-25,COD,5,Returned,4,Medium,Prioritize Delivery,North
+377,1,2026-03-16,2026-03-23,Prepaid,3,Delivered,7,Medium,Prioritize Delivery,North
+378,2,2026-04-01,2026-04-10,Prepaid,2,Delivered,9,Medium,Prioritize Delivery,West
+379,2,2026-01-07,2026-01-13,COD,5,Returned,6,High,Verify Order,West
+380,2,2026-03-29,2026-04-05,Prepaid,4,Returned,7,Medium,Prioritize Delivery,West
+381,1,2026-03-15,2026-03-18,COD,2,Returned,3,Low,Normal,North
+382,1,2026-03-01,2026-03-08,COD,3,Returned,7,High,Verify Order,North
+383,1,2026-03-07,2026-03-12,COD,3,Delivered,5,High,Verify Order,North
+384,2,2026-03-03,2026-03-09,COD,4,Returned,6,High,Verify Order,West
+385,2,2026-02-02,2026-02-04,Prepaid,5,Delivered,2,Medium,Prioritize Delivery,West
+386,2,2026-01-14,2026-01-20,COD,2,Returned,6,Medium,Prioritize Delivery,West
+387,1,2026-03-21,2026-03-29,COD,3,Returned,8,High,Verify Order,North
+388,2,2026-03-07,2026-03-15,Prepaid,2,Delivered,8,Medium,Prioritize Delivery,West
+389,2,2026-03-06,2026-03-10,Prepaid,2,Delivered,4,Medium,Prioritize Delivery,West
+390,1,2026-02-12,2026-02-20,COD,2,Returned,8,Medium,Prioritize Delivery,North
+391,2,2026-03-15,2026-03-18,Prepaid,5,Delivered,3,Medium,Prioritize Delivery,West
+392,2,2026-03-31,2026-04-09,Prepaid,5,Returned,9,Medium,Prioritize Delivery,West
+393,2,2026-03-20,2026-03-30,COD,3,Returned,10,High,Verify Order,West
+394,2,2026-01-06,2026-01-12,Prepaid,3,Delivered,6,Medium,Prioritize Delivery,West
+395,1,2026-03-16,2026-03-25,Prepaid,2,Delivered,9,Medium,Prioritize Delivery,North
+396,1,2026-02-13,2026-02-16,COD,4,Returned,3,Medium,Prioritize Delivery,North
+397,2,2026-03-28,2026-03-29,Prepaid,2,Delivered,1,Low,Normal,West
+398,2,2026-01-06,2026-01-08,Prepaid,1,Returned,2,Low,Normal,West
+399,2,2026-01-15,2026-01-25,Prepaid,3,Delivered,10,Medium,Prioritize Delivery,West
+400,1,2026-01-17,2026-01-21,Prepaid,1,Returned,4,Medium,Prioritize Delivery,North
+401,1,2026-03-10,2026-03-11,COD,3,Returned,1,Medium,Prioritize Delivery,North
+402,1,2026-03-30,2026-04-07,COD,5,Returned,8,High,Verify Order,North
+403,2,2026-03-15,2026-03-19,Prepaid,2,Returned,4,Medium,Prioritize Delivery,West
+404,2,2026-03-26,2026-04-03,COD,4,Returned,8,High,Verify Order,West
+405,1,2026-01-16,2026-01-18,COD,5,Returned,2,Medium,Prioritize Delivery,North
+406,1,2026-01-11,2026-01-17,Prepaid,1,Delivered,6,Medium,Prioritize Delivery,North
+407,1,2026-01-15,2026-01-25,Prepaid,4,Delivered,10,Medium,Prioritize Delivery,North
+408,1,2026-02-06,2026-02-12,Prepaid,5,Delivered,6,Medium,Prioritize Delivery,North
+409,2,2026-03-28,2026-04-01,COD,4,Returned,4,Medium,Prioritize Delivery,West
+410,1,2026-01-06,2026-01-09,COD,4,Returned,3,Medium,Prioritize Delivery,North
+411,2,2026-01-19,2026-01-25,COD,4,Returned,6,High,Verify Order,West
+412,2,2026-02-06,2026-02-14,COD,2,Returned,8,Medium,Prioritize Delivery,West
+413,2,2026-02-22,2026-03-04,Prepaid,2,Delivered,10,Medium,Prioritize Delivery,West
+414,1,2026-02-17,2026-02-20,COD,3,Returned,3,Medium,Prioritize Delivery,North
+415,1,2026-02-05,2026-02-13,COD,3,Returned,8,High,Verify Order,North
+416,2,2026-01-21,2026-01-31,COD,5,Returned,10,High,Verify Order,West
+417,1,2026-01-12,2026-01-14,COD,1,Returned,2,Low,Normal,North
+418,1,2026-03-11,2026-03-17,COD,4,Returned,6,High,Verify Order,North
+419,2,2026-02-24,2026-03-01,Prepaid,1,Returned,5,Medium,Prioritize Delivery,West
+420,1,2026-01-27,2026-02-03,Prepaid,4,Returned,7,Medium,Prioritize Delivery,North
+421,1,2026-01-24,2026-01-27,COD,2,Returned,3,Low,Normal,North
+422,1,2026-02-12,2026-02-21,COD,3,Returned,9,High,Verify Order,North
+423,2,2026-03-24,2026-04-03,COD,1,Returned,10,Medium,Prioritize Delivery,West
+424,2,2026-02-09,2026-02-11,COD,5,Delivered,2,Medium,Prioritize Delivery,West
+425,2,2026-01-14,2026-01-23,Prepaid,4,Returned,9,Medium,Prioritize Delivery,West
+426,1,2026-01-26,2026-02-03,COD,2,Returned,8,Medium,Prioritize Delivery,North
+427,1,2026-03-07,2026-03-12,Prepaid,5,Returned,5,Medium,Prioritize Delivery,North
+428,2,2026-02-28,2026-03-06,Prepaid,3,Delivered,6,Medium,Prioritize Delivery,West
+429,1,2026-02-11,2026-02-21,Prepaid,1,Delivered,10,Medium,Prioritize Delivery,North
+430,1,2026-03-04,2026-03-08,Prepaid,4,Delivered,4,Medium,Prioritize Delivery,North
+431,1,2026-01-27,2026-01-30,COD,1,Returned,3,Low,Normal,North
+432,1,2026-01-31,2026-02-09,Prepaid,3,Delivered,9,Medium,Prioritize Delivery,North
+433,1,2026-03-31,2026-04-07,Prepaid,4,Delivered,7,Medium,Prioritize Delivery,North
+434,1,2026-02-06,2026-02-16,COD,4,Returned,10,High,Verify Order,North
+435,2,2026-03-02,2026-03-11,COD,2,Returned,9,Medium,Prioritize Delivery,West
+436,2,2026-02-12,2026-02-16,Prepaid,3,Returned,4,Medium,Prioritize Delivery,West
+437,1,2026-03-16,2026-03-17,Prepaid,4,Returned,1,Medium,Prioritize Delivery,North
+438,1,2026-01-03,2026-01-09,COD,2,Returned,6,Medium,Prioritize Delivery,North
+439,1,2026-01-23,2026-01-28,COD,5,Delivered,5,High,Verify Order,North
+440,2,2026-01-15,2026-01-23,Prepaid,1,Delivered,8,Medium,Prioritize Delivery,West
+441,2,2026-01-07,2026-01-17,Prepaid,4,Returned,10,Medium,Prioritize Delivery,West
+442,1,2026-02-13,2026-02-18,COD,3,Delivered,5,High,Verify Order,North
+443,1,2026-01-13,2026-01-20,COD,5,Returned,7,High,Verify Order,North
+444,1,2026-01-23,2026-01-30,Prepaid,3,Returned,7,Medium,Prioritize Delivery,North
+445,1,2026-02-05,2026-02-13,COD,3,Returned,8,High,Verify Order,North
+446,1,2026-03-07,2026-03-15,Prepaid,4,Returned,8,Medium,Prioritize Delivery,North
+447,2,2026-03-11,2026-03-13,COD,4,Delivered,2,Medium,Prioritize Delivery,West
+448,1,2026-01-05,2026-01-06,Prepaid,1,Returned,1,Low,Normal,North
+449,1,2026-02-03,2026-02-13,Prepaid,4,Returned,10,Medium,Prioritize Delivery,North
+450,2,2026-02-21,2026-03-03,Prepaid,4,Returned,10,Medium,Prioritize Delivery,West
+451,2,2026-01-12,2026-01-19,Prepaid,5,Returned,7,Medium,Prioritize Delivery,West
+452,1,2026-03-12,2026-03-13,Prepaid,2,Returned,1,Low,Normal,North
+453,2,2026-02-02,2026-02-09,COD,4,Returned,7,High,Verify Order,West
+454,1,2026-01-06,2026-01-14,Prepaid,5,Returned,8,Medium,Prioritize Delivery,North
+455,2,2026-03-02,2026-03-03,COD,5,Returned,1,Medium,Prioritize Delivery,West
+456,1,2026-01-21,2026-01-28,Prepaid,1,Returned,7,Medium,Prioritize Delivery,North
+457,1,2026-01-26,2026-02-01,COD,4,Returned,6,High,Verify Order,North
+458,1,2026-02-10,2026-02-12,Prepaid,5,Returned,2,Medium,Prioritize Delivery,North
+459,2,2026-03-14,2026-03-15,COD,2,Delivered,1,Low,Normal,West
+460,1,2026-03-14,2026-03-23,Prepaid,4,Delivered,9,Medium,Prioritize Delivery,North
+461,2,2026-03-21,2026-03-30,COD,4,Returned,9,High,Verify Order,West
+462,1,2026-03-28,2026-03-29,Prepaid,1,Returned,1,Low,Normal,North
+463,2,2026-03-15,2026-03-16,Prepaid,2,Returned,1,Low,Normal,West
+464,1,2026-02-26,2026-03-03,COD,2,Delivered,5,Medium,Prioritize Delivery,North
+465,2,2026-01-18,2026-01-23,COD,1,Returned,5,Medium,Prioritize Delivery,West
+466,1,2026-03-05,2026-03-14,COD,5,Returned,9,High,Verify Order,North
+467,2,2026-01-12,2026-01-21,Prepaid,5,Delivered,9,Medium,Prioritize Delivery,West
+468,2,2026-02-23,2026-03-02,COD,4,Returned,7,High,Verify Order,West
+469,2,2026-03-02,2026-03-08,COD,1,Returned,6,Medium,Prioritize Delivery,West
+470,2,2026-02-18,2026-02-21,COD,3,Returned,3,Medium,Prioritize Delivery,West
+471,2,2026-03-07,2026-03-08,COD,1,Delivered,1,Low,Normal,West
+472,1,2026-02-17,2026-02-19,COD,4,Delivered,2,Medium,Prioritize Delivery,North
+473,2,2026-01-25,2026-02-01,Prepaid,5,Returned,7,Medium,Prioritize Delivery,West
+474,2,2026-04-01,2026-04-06,COD,4,Delivered,5,High,Verify Order,West
+475,1,2026-01-04,2026-01-10,COD,4,Returned,6,High,Verify Order,North
+476,1,2026-03-08,2026-03-16,Prepaid,1,Returned,8,Medium,Prioritize Delivery,North
+477,1,2026-04-01,2026-04-05,Prepaid,3,Returned,4,Medium,Prioritize Delivery,North
+478,1,2026-02-17,2026-02-23,COD,4,Returned,6,High,Verify Order,North
+479,1,2026-01-20,2026-01-25,COD,3,Delivered,5,High,Verify Order,North
+480,1,2026-02-23,2026-02-28,Prepaid,4,Delivered,5,Medium,Prioritize Delivery,North
+481,1,2026-02-15,2026-02-16,Prepaid,2,Returned,1,Low,Normal,North
+482,1,2026-03-16,2026-03-26,Prepaid,5,Delivered,10,Medium,Prioritize Delivery,North
+483,2,2026-01-21,2026-01-27,Prepaid,1,Delivered,6,Medium,Prioritize Delivery,West
+484,1,2026-02-28,2026-03-04,Prepaid,5,Returned,4,Medium,Prioritize Delivery,North
+485,2,2026-01-19,2026-01-28,Prepaid,3,Delivered,9,Medium,Prioritize Delivery,West
+486,1,2026-02-26,2026-03-06,COD,3,Returned,8,High,Verify Order,North
+487,2,2026-02-24,2026-02-26,COD,5,Returned,2,Medium,Prioritize Delivery,West
+488,2,2026-03-03,2026-03-06,Prepaid,4,Returned,3,Medium,Prioritize Delivery,West
+489,2,2026-02-03,2026-02-10,Prepaid,5,Delivered,7,Medium,Prioritize Delivery,West
+490,2,2026-01-12,2026-01-18,Prepaid,5,Delivered,6,Medium,Prioritize Delivery,West
+491,2,2026-03-01,2026-03-06,Prepaid,5,Delivered,5,Medium,Prioritize Delivery,West
+492,2,2026-03-29,2026-04-07,COD,3,Returned,9,High,Verify Order,West
+493,2,2026-02-05,2026-02-07,Prepaid,3,Delivered,2,Medium,Prioritize Delivery,West
+494,2,2026-02-10,2026-02-17,COD,3,Returned,7,High,Verify Order,West
+495,1,2026-03-01,2026-03-02,COD,2,Returned,1,Low,Normal,North
+496,1,2026-02-25,2026-03-05,COD,5,Returned,8,High,Verify Order,North
+497,1,2026-01-14,2026-01-17,COD,3,Returned,3,Medium,Prioritize Delivery,North
+498,2,2026-03-03,2026-03-09,Prepaid,2,Returned,6,Medium,Prioritize Delivery,West
+499,1,2026-01-09,2026-01-18,COD,5,Returned,9,High,Verify Order,North
+500,2,2026-01-30,2026-02-01,COD,3,Delivered,2,Medium,Prioritize Delivery,West
+501,1,2026-01-25,2026-02-04,Prepaid,5,Returned,10,Medium,Prioritize Delivery,North
+502,1,2026-02-24,2026-03-05,Prepaid,4,Delivered,9,Medium,Prioritize Delivery,North
+503,1,2026-01-21,2026-01-25,Prepaid,2,Delivered,4,Medium,Prioritize Delivery,North
+504,1,2026-02-26,2026-03-06,Prepaid,1,Returned,8,Medium,Prioritize Delivery,North
+505,2,2026-03-13,2026-03-18,COD,5,Returned,5,High,Verify Order,West
+506,1,2026-02-28,2026-03-10,COD,1,Returned,10,Medium,Prioritize Delivery,North
+507,1,2026-02-09,2026-02-10,Prepaid,2,Returned,1,Low,Normal,North
+508,1,2026-03-19,2026-03-24,COD,1,Delivered,5,Medium,Prioritize Delivery,North
+509,2,2026-02-04,2026-02-08,COD,3,Returned,4,Medium,Prioritize Delivery,West
+510,2,2026-01-06,2026-01-11,Prepaid,4,Delivered,5,Medium,Prioritize Delivery,West
+511,1,2026-01-26,2026-01-29,Prepaid,1,Returned,3,Low,Normal,North
+512,2,2026-01-26,2026-01-29,COD,1,Returned,3,Low,Normal,West
+513,1,2026-01-06,2026-01-14,COD,1,Returned,8,Medium,Prioritize Delivery,North
+514,2,2026-01-23,2026-01-30,Prepaid,3,Delivered,7,Medium,Prioritize Delivery,West
+515,1,2026-02-10,2026-02-15,COD,3,Returned,5,High,Verify Order,North
+516,2,2026-01-05,2026-01-15,Prepaid,5,Delivered,10,Medium,Prioritize Delivery,West
+517,2,2026-03-28,2026-04-04,COD,2,Returned,7,Medium,Prioritize Delivery,West
+518,1,2026-01-04,2026-01-14,Prepaid,5,Returned,10,Medium,Prioritize Delivery,North
+519,1,2026-03-10,2026-03-18,COD,5,Returned,8,High,Verify Order,North
+520,1,2026-01-02,2026-01-11,Prepaid,4,Returned,9,Medium,Prioritize Delivery,North
+521,1,2026-01-01,2026-01-02,COD,4,Delivered,1,Medium,Prioritize Delivery,North
+522,2,2026-01-22,2026-01-28,COD,5,Returned,6,High,Verify Order,West
+523,1,2026-02-02,2026-02-10,COD,2,Returned,8,Medium,Prioritize Delivery,North
+524,1,2026-03-26,2026-03-28,Prepaid,3,Delivered,2,Medium,Prioritize Delivery,North
+525,2,2026-01-30,2026-02-09,Prepaid,5,Returned,10,Medium,Prioritize Delivery,West
+526,1,2026-03-19,2026-03-23,COD,2,Returned,4,Medium,Prioritize Delivery,North
+527,2,2026-01-07,2026-01-08,Prepaid,5,Returned,1,Medium,Prioritize Delivery,West
+528,2,2026-02-01,2026-02-02,COD,3,Returned,1,Medium,Prioritize Delivery,West
+529,2,2026-03-29,2026-03-30,COD,2,Delivered,1,Low,Normal,West
+530,2,2026-01-20,2026-01-25,COD,1,Delivered,5,Medium,Prioritize Delivery,West
+531,1,2026-02-16,2026-02-18,Prepaid,4,Returned,2,Medium,Prioritize Delivery,North
+532,1,2026-02-01,2026-02-05,Prepaid,5,Returned,4,Medium,Prioritize Delivery,North
+533,1,2026-02-02,2026-02-03,COD,5,Delivered,1,Medium,Prioritize Delivery,North
+534,2,2026-03-23,2026-03-30,COD,1,Returned,7,Medium,Prioritize Delivery,West
+535,2,2026-03-24,2026-03-29,COD,3,Returned,5,High,Verify Order,West
+536,2,2026-03-19,2026-03-26,Prepaid,3,Delivered,7,Medium,Prioritize Delivery,West
+537,2,2026-03-09,2026-03-11,COD,1,Delivered,2,Low,Normal,West
+538,2,2026-03-01,2026-03-02,COD,4,Delivered,1,Medium,Prioritize Delivery,West
+539,2,2026-02-06,2026-02-16,COD,1,Returned,10,Medium,Prioritize Delivery,West
+540,2,2026-03-10,2026-03-11,COD,4,Returned,1,Medium,Prioritize Delivery,West
+541,2,2026-03-30,2026-04-03,Prepaid,5,Returned,4,Medium,Prioritize Delivery,West
+542,1,2026-01-17,2026-01-26,COD,1,Returned,9,Medium,Prioritize Delivery,North
+543,2,2026-01-18,2026-01-20,COD,2,Returned,2,Low,Normal,West
+544,1,2026-01-13,2026-01-15,COD,1,Returned,2,Low,Normal,North
+545,1,2026-02-20,2026-02-22,COD,2,Returned,2,Low,Normal,North
+546,1,2026-03-18,2026-03-26,Prepaid,3,Delivered,8,Medium,Prioritize Delivery,North
+547,2,2026-02-19,2026-02-26,COD,1,Returned,7,Medium,Prioritize Delivery,West
+548,2,2026-02-06,2026-02-10,COD,4,Returned,4,Medium,Prioritize Delivery,West
+549,1,2026-02-11,2026-02-16,COD,2,Returned,5,Medium,Prioritize Delivery,North
+550,2,2026-03-29,2026-04-03,Prepaid,1,Delivered,5,Medium,Prioritize Delivery,West
+551,2,2026-02-21,2026-02-27,COD,5,Returned,6,High,Verify Order,West
+552,1,2026-02-14,2026-02-24,COD,5,Returned,10,High,Verify Order,North
+553,2,2026-01-17,2026-01-26,COD,3,Returned,9,High,Verify Order,West
+554,1,2026-01-17,2026-01-23,Prepaid,4,Returned,6,Medium,Prioritize Delivery,North
+555,2,2026-01-30,2026-02-04,COD,2,Returned,5,Medium,Prioritize Delivery,West
+556,2,2026-01-06,2026-01-11,COD,5,Delivered,5,High,Verify Order,West
+557,1,2026-01-10,2026-01-18,Prepaid,5,Delivered,8,Medium,Prioritize Delivery,North
+558,1,2026-01-10,2026-01-14,Prepaid,4,Returned,4,Medium,Prioritize Delivery,North
+559,2,2026-01-18,2026-01-27,COD,3,Returned,9,High,Verify Order,West
+560,1,2026-03-15,2026-03-19,COD,3,Returned,4,Medium,Prioritize Delivery,North
+561,2,2026-03-02,2026-03-05,Prepaid,3,Returned,3,Medium,Prioritize Delivery,West
+562,1,2026-03-26,2026-03-30,COD,3,Returned,4,Medium,Prioritize Delivery,North
+563,2,2026-01-22,2026-01-29,COD,3,Returned,7,High,Verify Order,West
+564,1,2026-01-20,2026-01-27,Prepaid,5,Delivered,7,Medium,Prioritize Delivery,North
+565,1,2026-03-28,2026-04-04,Prepaid,1,Returned,7,Medium,Prioritize Delivery,North
+566,2,2026-03-07,2026-03-15,Prepaid,1,Delivered,8,Medium,Prioritize Delivery,West
+567,1,2026-03-13,2026-03-19,Prepaid,4,Returned,6,Medium,Prioritize Delivery,North
+568,2,2026-02-13,2026-02-23,COD,1,Returned,10,Medium,Prioritize Delivery,West
+569,2,2026-02-18,2026-02-26,Prepaid,5,Delivered,8,Medium,Prioritize Delivery,West
+570,1,2026-02-25,2026-03-07,COD,2,Returned,10,Medium,Prioritize Delivery,North
+571,1,2026-03-24,2026-03-31,COD,4,Returned,7,High,Verify Order,North
+572,1,2026-03-26,2026-04-03,COD,2,Returned,8,Medium,Prioritize Delivery,North
+573,2,2026-03-13,2026-03-22,COD,1,Returned,9,Medium,Prioritize Delivery,West
+574,1,2026-03-01,2026-03-11,Prepaid,4,Returned,10,Medium,Prioritize Delivery,North
+575,2,2026-04-01,2026-04-05,Prepaid,1,Returned,4,Medium,Prioritize Delivery,West
+576,2,2026-02-26,2026-02-28,Prepaid,1,Returned,2,Low,Normal,West
+577,1,2026-01-04,2026-01-10,Prepaid,1,Returned,6,Medium,Prioritize Delivery,North
+578,2,2026-03-24,2026-04-02,COD,5,Returned,9,High,Verify Order,West
+579,2,2026-03-25,2026-04-04,COD,5,Returned,10,High,Verify Order,West
+580,1,2026-02-15,2026-02-23,Prepaid,5,Returned,8,Medium,Prioritize Delivery,North
+581,2,2026-02-12,2026-02-20,Prepaid,2,Delivered,8,Medium,Prioritize Delivery,West
+582,2,2026-02-10,2026-02-16,Prepaid,2,Delivered,6,Medium,Prioritize Delivery,West
+583,1,2026-02-12,2026-02-14,Prepaid,3,Delivered,2,Medium,Prioritize Delivery,North
+584,1,2026-03-23,2026-03-31,COD,1,Returned,8,Medium,Prioritize Delivery,North
+585,1,2026-03-30,2026-04-04,Prepaid,2,Delivered,5,Medium,Prioritize Delivery,North
+586,1,2026-03-06,2026-03-13,COD,2,Returned,7,Medium,Prioritize Delivery,North
+587,2,2026-01-11,2026-01-19,Prepaid,3,Returned,8,Medium,Prioritize Delivery,West
+588,2,2026-01-11,2026-01-12,COD,1,Returned,1,Low,Normal,West
+589,1,2026-02-25,2026-02-26,COD,5,Returned,1,Medium,Prioritize Delivery,North
+590,2,2026-02-23,2026-03-04,Prepaid,5,Returned,9,Medium,Prioritize Delivery,West
+591,1,2026-03-16,2026-03-26,Prepaid,5,Returned,10,Medium,Prioritize Delivery,North
+592,1,2026-03-21,2026-03-23,COD,4,Returned,2,Medium,Prioritize Delivery,North
+593,2,2026-03-21,2026-03-31,COD,3,Returned,10,High,Verify Order,West
+594,1,2026-02-12,2026-02-22,COD,5,Returned,10,High,Verify Order,North
+595,1,2026-01-30,2026-02-03,Prepaid,5,Returned,4,Medium,Prioritize Delivery,North
+596,1,2026-01-18,2026-01-24,Prepaid,3,Delivered,6,Medium,Prioritize Delivery,North
+597,1,2026-01-03,2026-01-04,Prepaid,5,Returned,1,Medium,Prioritize Delivery,North
+598,1,2026-01-20,2026-01-30,Prepaid,3,Delivered,10,Medium,Prioritize Delivery,North
+599,2,2026-02-10,2026-02-16,Prepaid,3,Delivered,6,Medium,Prioritize Delivery,West
+600,1,2026-02-26,2026-03-04,Prepaid,3,Returned,6,Medium,Prioritize Delivery,North
+601,2,2026-03-11,2026-03-17,COD,4,Returned,6,High,Verify Order,West
+602,2,2026-02-28,2026-03-05,Prepaid,1,Delivered,5,Medium,Prioritize Delivery,West
+603,1,2026-02-10,2026-02-19,Prepaid,4,Delivered,9,Medium,Prioritize Delivery,North
+604,1,2026-01-23,2026-01-31,COD,4,Returned,8,High,Verify Order,North
+605,1,2026-03-31,2026-04-07,Prepaid,4,Returned,7,Medium,Prioritize Delivery,North
+606,1,2026-03-24,2026-04-03,COD,4,Returned,10,High,Verify Order,North
+607,2,2026-03-05,2026-03-14,COD,3,Returned,9,High,Verify Order,West
+608,2,2026-02-19,2026-02-21,COD,2,Delivered,2,Low,Normal,West
+609,1,2026-01-17,2026-01-25,COD,3,Returned,8,High,Verify Order,North
+610,1,2026-01-26,2026-02-01,COD,1,Returned,6,Medium,Prioritize Delivery,North
+611,2,2026-02-28,2026-03-10,COD,2,Returned,10,Medium,Prioritize Delivery,West
+612,1,2026-03-28,2026-04-05,Prepaid,5,Delivered,8,Medium,Prioritize Delivery,North
+613,1,2026-02-17,2026-02-19,COD,5,Returned,2,Medium,Prioritize Delivery,North
+614,1,2026-02-03,2026-02-13,COD,2,Returned,10,Medium,Prioritize Delivery,North
+615,2,2026-01-05,2026-01-14,COD,5,Returned,9,High,Verify Order,West
+616,2,2026-02-23,2026-02-28,COD,3,Delivered,5,High,Verify Order,West
+617,1,2026-03-31,2026-04-07,COD,2,Returned,7,Medium,Prioritize Delivery,North
+618,1,2026-02-19,2026-02-22,Prepaid,5,Delivered,3,Medium,Prioritize Delivery,North
+619,1,2026-01-28,2026-02-04,Prepaid,3,Returned,7,Medium,Prioritize Delivery,North
+620,1,2026-03-27,2026-03-30,Prepaid,4,Returned,3,Medium,Prioritize Delivery,North
+621,1,2026-01-15,2026-01-21,Prepaid,1,Delivered,6,Medium,Prioritize Delivery,North
+622,2,2026-01-18,2026-01-27,Prepaid,3,Delivered,9,Medium,Prioritize Delivery,West
+623,2,2026-01-21,2026-01-25,Prepaid,2,Returned,4,Medium,Prioritize Delivery,West
+624,1,2026-03-30,2026-03-31,Prepaid,3,Delivered,1,Medium,Prioritize Delivery,North
+625,2,2026-01-18,2026-01-23,COD,2,Returned,5,Medium,Prioritize Delivery,West
+626,1,2026-02-03,2026-02-04,Prepaid,3,Delivered,1,Medium,Prioritize Delivery,North
+627,1,2026-03-07,2026-03-16,Prepaid,3,Returned,9,Medium,Prioritize Delivery,North
+628,2,2026-01-30,2026-02-03,Prepaid,4,Delivered,4,Medium,Prioritize Delivery,West
+629,2,2026-01-16,2026-01-18,COD,1,Delivered,2,Low,Normal,West
+630,1,2026-01-11,2026-01-15,COD,4,Delivered,4,Medium,Prioritize Delivery,North
+631,2,2026-01-01,2026-01-05,COD,2,Returned,4,Medium,Prioritize Delivery,West
+632,2,2026-03-11,2026-03-16,COD,4,Returned,5,High,Verify Order,West
+633,2,2026-01-11,2026-01-21,Prepaid,4,Delivered,10,Medium,Prioritize Delivery,West
+634,2,2026-03-06,2026-03-08,COD,2,Delivered,2,Low,Normal,West
+635,2,2026-02-11,2026-02-16,COD,1,Returned,5,Medium,Prioritize Delivery,West
+636,1,2026-02-26,2026-03-08,COD,2,Returned,10,Medium,Prioritize Delivery,North
+637,2,2026-03-21,2026-03-25,COD,4,Delivered,4,Medium,Prioritize Delivery,West
+638,1,2026-02-21,2026-02-23,COD,1,Delivered,2,Low,Normal,North
+639,1,2026-01-08,2026-01-15,COD,1,Returned,7,Medium,Prioritize Delivery,North
+640,1,2026-03-26,2026-04-01,COD,4,Returned,6,High,Verify Order,North
+641,1,2026-01-09,2026-01-13,COD,2,Returned,4,Medium,Prioritize Delivery,North
+642,2,2026-01-11,2026-01-12,Prepaid,4,Returned,1,Medium,Prioritize Delivery,West
+643,2,2026-03-03,2026-03-06,COD,5,Returned,3,Medium,Prioritize Delivery,West
+644,1,2026-03-01,2026-03-06,Prepaid,5,Returned,5,Medium,Prioritize Delivery,North
+645,2,2026-04-01,2026-04-10,COD,3,Returned,9,High,Verify Order,West
+646,1,2026-03-26,2026-04-05,COD,4,Returned,10,High,Verify Order,North
+647,2,2026-02-14,2026-02-23,Prepaid,1,Returned,9,Medium,Prioritize Delivery,West
+648,2,2026-03-08,2026-03-11,Prepaid,1,Returned,3,Low,Normal,West
+649,1,2026-01-20,2026-01-24,COD,4,Returned,4,Medium,Prioritize Delivery,North
+650,2,2026-02-09,2026-02-11,COD,1,Returned,2,Low,Normal,West
+651,1,2026-01-15,2026-01-19,Prepaid,5,Returned,4,Medium,Prioritize Delivery,North
+652,2,2026-03-15,2026-03-18,Prepaid,4,Returned,3,Medium,Prioritize Delivery,West
+653,2,2026-03-12,2026-03-21,COD,5,Returned,9,High,Verify Order,West
+654,1,2026-01-31,2026-02-05,Prepaid,1,Returned,5,Medium,Prioritize Delivery,North
+655,2,2026-02-04,2026-02-13,COD,2,Returned,9,Medium,Prioritize Delivery,West
+656,2,2026-01-26,2026-01-30,Prepaid,1,Returned,4,Medium,Prioritize Delivery,West
+657,2,2026-03-04,2026-03-13,Prepaid,1,Delivered,9,Medium,Prioritize Delivery,West
+658,2,2026-03-29,2026-04-04,Prepaid,3,Returned,6,Medium,Prioritize Delivery,West
+659,1,2026-02-03,2026-02-13,Prepaid,5,Returned,10,Medium,Prioritize Delivery,North
+660,1,2026-02-27,2026-03-06,Prepaid,4,Delivered,7,Medium,Prioritize Delivery,North
+661,2,2026-02-22,2026-02-24,COD,3,Returned,2,Medium,Prioritize Delivery,West
+662,1,2026-01-05,2026-01-14,Prepaid,3,Delivered,9,Medium,Prioritize Delivery,North
+663,2,2026-01-31,2026-02-05,COD,4,Delivered,5,High,Verify Order,West
+664,2,2026-01-22,2026-01-24,Prepaid,4,Returned,2,Medium,Prioritize Delivery,West
+665,1,2026-01-04,2026-01-12,Prepaid,1,Delivered,8,Medium,Prioritize Delivery,North
+666,1,2026-02-06,2026-02-11,Prepaid,4,Returned,5,Medium,Prioritize Delivery,North
+667,1,2026-01-19,2026-01-22,Prepaid,1,Returned,3,Low,Normal,North
+668,2,2026-04-01,2026-04-03,COD,1,Delivered,2,Low,Normal,West
+669,1,2026-01-03,2026-01-06,COD,2,Delivered,3,Low,Normal,North
+670,2,2026-01-22,2026-01-27,Prepaid,1,Delivered,5,Medium,Prioritize Delivery,West
+671,1,2026-02-12,2026-02-18,COD,2,Returned,6,Medium,Prioritize Delivery,North
+672,1,2026-01-31,2026-02-06,Prepaid,4,Delivered,6,Medium,Prioritize Delivery,North
+673,1,2026-01-07,2026-01-13,Prepaid,4,Delivered,6,Medium,Prioritize Delivery,North
+674,1,2026-03-02,2026-03-04,COD,5,Returned,2,Medium,Prioritize Delivery,North
+675,2,2026-04-01,2026-04-09,Prepaid,1,Returned,8,Medium,Prioritize Delivery,West
+676,2,2026-02-18,2026-02-22,Prepaid,5,Delivered,4,Medium,Prioritize Delivery,West
+677,1,2026-03-30,2026-03-31,Prepaid,3,Returned,1,Medium,Prioritize Delivery,North
+678,2,2026-02-21,2026-02-25,COD,2,Delivered,4,Medium,Prioritize Delivery,West
+679,2,2026-01-10,2026-01-20,COD,5,Returned,10,High,Verify Order,West
+680,2,2026-03-14,2026-03-17,COD,5,Delivered,3,Medium,Prioritize Delivery,West
+681,2,2026-01-22,2026-02-01,COD,2,Returned,10,Medium,Prioritize Delivery,West
+682,2,2026-02-27,2026-03-04,COD,3,Delivered,5,High,Verify Order,West
+683,1,2026-02-24,2026-03-02,COD,5,Returned,6,High,Verify Order,North
+684,1,2026-03-16,2026-03-22,COD,4,Returned,6,High,Verify Order,North
+685,1,2026-03-08,2026-03-15,COD,4,Returned,7,High,Verify Order,North
+686,1,2026-04-01,2026-04-10,Prepaid,5,Delivered,9,Medium,Prioritize Delivery,North
+687,1,2026-01-02,2026-01-04,Prepaid,2,Returned,2,Low,Normal,North
+688,2,2026-02-07,2026-02-10,Prepaid,2,Delivered,3,Low,Normal,West
+689,1,2026-01-27,2026-02-05,Prepaid,2,Delivered,9,Medium,Prioritize Delivery,North
+690,1,2026-02-04,2026-02-05,Prepaid,4,Delivered,1,Medium,Prioritize Delivery,North
+691,2,2026-03-26,2026-04-05,Prepaid,3,Delivered,10,Medium,Prioritize Delivery,West
+692,1,2026-03-10,2026-03-17,Prepaid,3,Returned,7,Medium,Prioritize Delivery,North
+693,2,2026-03-17,2026-03-21,Prepaid,3,Delivered,4,Medium,Prioritize Delivery,West
+694,1,2026-01-19,2026-01-27,Prepaid,1,Delivered,8,Medium,Prioritize Delivery,North
+695,1,2026-03-13,2026-03-22,Prepaid,4,Delivered,9,Medium,Prioritize Delivery,North
+696,1,2026-01-27,2026-02-06,COD,2,Returned,10,Medium,Prioritize Delivery,North
+697,2,2026-01-04,2026-01-06,Prepaid,3,Returned,2,Medium,Prioritize Delivery,West
+698,1,2026-02-25,2026-03-06,Prepaid,4,Returned,9,Medium,Prioritize Delivery,North
+699,1,2026-01-30,2026-02-03,COD,4,Returned,4,Medium,Prioritize Delivery,North
+700,1,2026-02-11,2026-02-18,Prepaid,1,Delivered,7,Medium,Prioritize Delivery,North
+701,1,2026-02-10,2026-02-19,Prepaid,3,Delivered,9,Medium,Prioritize Delivery,North
+702,2,2026-03-01,2026-03-02,Prepaid,1,Delivered,1,Low,Normal,West
+703,1,2026-01-22,2026-01-25,Prepaid,5,Returned,3,Medium,Prioritize Delivery,North
+704,2,2026-02-13,2026-02-19,COD,3,Returned,6,High,Verify Order,West
+705,2,2026-01-19,2026-01-20,COD,5,Returned,1,Medium,Prioritize Delivery,West
+706,2,2026-02-23,2026-02-28,COD,5,Returned,5,High,Verify Order,West
+707,2,2026-02-27,2026-03-05,Prepaid,2,Delivered,6,Medium,Prioritize Delivery,West
+708,1,2026-01-11,2026-01-17,COD,2,Returned,6,Medium,Prioritize Delivery,North
+709,2,2026-02-08,2026-02-16,Prepaid,2,Delivered,8,Medium,Prioritize Delivery,West
+710,1,2026-01-13,2026-01-19,Prepaid,3,Delivered,6,Medium,Prioritize Delivery,North
+711,1,2026-02-20,2026-02-25,Prepaid,5,Delivered,5,Medium,Prioritize Delivery,North
+712,1,2026-01-11,2026-01-18,Prepaid,4,Returned,7,Medium,Prioritize Delivery,North
+713,1,2026-03-14,2026-03-23,COD,5,Returned,9,High,Verify Order,North
+714,1,2026-02-09,2026-02-17,COD,3,Returned,8,High,Verify Order,North
+715,2,2026-02-18,2026-02-21,Prepaid,2,Delivered,3,Low,Normal,West
+716,2,2026-03-16,2026-03-25,COD,2,Returned,9,Medium,Prioritize Delivery,West
+717,2,2026-02-19,2026-03-01,COD,1,Returned,10,Medium,Prioritize Delivery,West
+718,2,2026-01-05,2026-01-10,Prepaid,5,Returned,5,Medium,Prioritize Delivery,West
+719,2,2026-03-23,2026-03-29,COD,2,Returned,6,Medium,Prioritize Delivery,West
+720,1,2026-02-26,2026-03-08,Prepaid,1,Delivered,10,Medium,Prioritize Delivery,North
+721,1,2026-03-30,2026-04-02,COD,5,Returned,3,Medium,Prioritize Delivery,North
+722,2,2026-01-11,2026-01-21,COD,1,Returned,10,Medium,Prioritize Delivery,West
+723,2,2026-03-31,2026-04-07,COD,2,Returned,7,Medium,Prioritize Delivery,West
+724,1,2026-02-05,2026-02-14,Prepaid,4,Returned,9,Medium,Prioritize Delivery,North
+725,2,2026-02-14,2026-02-21,COD,2,Returned,7,Medium,Prioritize Delivery,West
+726,2,2026-02-23,2026-03-01,COD,2,Returned,6,Medium,Prioritize Delivery,West
+727,1,2026-02-10,2026-02-16,COD,1,Returned,6,Medium,Prioritize Delivery,North
+728,1,2026-03-29,2026-03-31,Prepaid,2,Returned,2,Low,Normal,North
+729,2,2026-01-06,2026-01-08,COD,2,Returned,2,Low,Normal,West
+730,2,2026-02-23,2026-03-04,Prepaid,3,Returned,9,Medium,Prioritize Delivery,West
+731,2,2026-01-09,2026-01-17,Prepaid,2,Delivered,8,Medium,Prioritize Delivery,West
+732,1,2026-03-05,2026-03-10,COD,4,Delivered,5,High,Verify Order,North
+733,1,2026-01-22,2026-01-23,COD,3,Returned,1,Medium,Prioritize Delivery,North
+734,1,2026-04-01,2026-04-09,COD,4,Returned,8,High,Verify Order,North
+735,2,2026-03-21,2026-03-24,COD,1,Delivered,3,Low,Normal,West
+736,2,2026-03-11,2026-03-18,COD,4,Returned,7,High,Verify Order,West
+737,2,2026-03-02,2026-03-04,COD,1,Returned,2,Low,Normal,West
+738,1,2026-01-13,2026-01-15,Prepaid,4,Delivered,2,Medium,Prioritize Delivery,North
+739,2,2026-03-17,2026-03-19,COD,5,Delivered,2,Medium,Prioritize Delivery,West
+740,2,2026-02-10,2026-02-17,COD,3,Returned,7,High,Verify Order,West
+741,1,2026-02-11,2026-02-20,Prepaid,5,Returned,9,Medium,Prioritize Delivery,North
+742,1,2026-01-28,2026-02-07,Prepaid,4,Returned,10,Medium,Prioritize Delivery,North
+743,1,2026-02-22,2026-02-26,COD,2,Returned,4,Medium,Prioritize Delivery,North
+744,2,2026-02-11,2026-02-18,COD,4,Returned,7,High,Verify Order,West
+745,1,2026-02-18,2026-02-21,Prepaid,4,Returned,3,Medium,Prioritize Delivery,North
+746,1,2026-03-31,2026-04-01,Prepaid,2,Returned,1,Low,Normal,North
+747,1,2026-01-22,2026-01-31,COD,3,Returned,9,High,Verify Order,North
+748,2,2026-02-02,2026-02-09,Prepaid,1,Delivered,7,Medium,Prioritize Delivery,West
+749,1,2026-02-10,2026-02-12,COD,2,Delivered,2,Low,Normal,North
+750,1,2026-01-20,2026-01-21,Prepaid,5,Delivered,1,Medium,Prioritize Delivery,North
+751,2,2026-03-05,2026-03-13,Prepaid,4,Delivered,8,Medium,Prioritize Delivery,West
+752,2,2026-02-18,2026-02-27,Prepaid,3,Returned,9,Medium,Prioritize Delivery,West
+753,2,2026-03-21,2026-03-26,COD,1,Delivered,5,Medium,Prioritize Delivery,West
+754,1,2026-02-22,2026-03-02,Prepaid,1,Returned,8,Medium,Prioritize Delivery,North
+755,2,2026-02-15,2026-02-16,COD,3,Returned,1,Medium,Prioritize Delivery,West
+756,1,2026-02-18,2026-02-24,Prepaid,3,Delivered,6,Medium,Prioritize Delivery,North
+757,1,2026-03-06,2026-03-10,Prepaid,1,Delivered,4,Medium,Prioritize Delivery,North
+758,1,2026-02-14,2026-02-15,COD,4,Delivered,1,Medium,Prioritize Delivery,North
+759,2,2026-02-18,2026-02-19,COD,5,Delivered,1,Medium,Prioritize Delivery,West
+760,2,2026-03-06,2026-03-12,Prepaid,4,Delivered,6,Medium,Prioritize Delivery,West
+761,1,2026-03-06,2026-03-09,Prepaid,1,Delivered,3,Low,Normal,North
+762,1,2026-03-17,2026-03-24,COD,4,Returned,7,High,Verify Order,North
+763,1,2026-01-24,2026-01-25,COD,1,Returned,1,Low,Normal,North
+764,1,2026-01-20,2026-01-28,Prepaid,3,Returned,8,Medium,Prioritize Delivery,North
+765,2,2026-03-03,2026-03-05,Prepaid,2,Returned,2,Low,Normal,West
+766,1,2026-01-20,2026-01-21,COD,5,Delivered,1,Medium,Prioritize Delivery,North
+767,2,2026-01-02,2026-01-04,COD,2,Delivered,2,Low,Normal,West
+768,2,2026-01-22,2026-01-27,Prepaid,1,Delivered,5,Medium,Prioritize Delivery,West
+769,1,2026-02-11,2026-02-17,COD,5,Returned,6,High,Verify Order,North
+770,2,2026-03-08,2026-03-17,COD,5,Returned,9,High,Verify Order,West
+771,2,2026-01-17,2026-01-23,COD,1,Returned,6,Medium,Prioritize Delivery,West
+772,2,2026-01-07,2026-01-15,COD,1,Returned,8,Medium,Prioritize Delivery,West
+773,2,2026-02-12,2026-02-16,COD,4,Delivered,4,Medium,Prioritize Delivery,West
+774,2,2026-01-28,2026-01-31,COD,2,Delivered,3,Low,Normal,West
+775,1,2026-03-12,2026-03-14,Prepaid,1,Delivered,2,Low,Normal,North
+776,1,2026-01-21,2026-01-22,COD,5,Returned,1,Medium,Prioritize Delivery,North
+777,1,2026-02-26,2026-03-05,COD,1,Returned,7,Medium,Prioritize Delivery,North
+778,1,2026-03-01,2026-03-06,COD,3,Returned,5,High,Verify Order,North
+779,1,2026-03-01,2026-03-09,COD,4,Returned,8,High,Verify Order,North
+780,1,2026-02-14,2026-02-15,COD,5,Returned,1,Medium,Prioritize Delivery,North
+781,2,2026-02-16,2026-02-19,COD,1,Delivered,3,Low,Normal,West
+782,1,2026-01-11,2026-01-20,COD,5,Returned,9,High,Verify Order,North
+783,1,2026-03-05,2026-03-13,COD,1,Returned,8,Medium,Prioritize Delivery,North
+784,1,2026-01-22,2026-01-27,Prepaid,4,Delivered,5,Medium,Prioritize Delivery,North
+785,1,2026-01-08,2026-01-09,COD,5,Returned,1,Medium,Prioritize Delivery,North
+786,2,2026-01-26,2026-02-04,Prepaid,1,Returned,9,Medium,Prioritize Delivery,West
+787,1,2026-01-08,2026-01-09,Prepaid,5,Delivered,1,Medium,Prioritize Delivery,North
+788,2,2026-03-05,2026-03-14,COD,2,Returned,9,Medium,Prioritize Delivery,West
+789,2,2026-02-25,2026-03-04,COD,2,Returned,7,Medium,Prioritize Delivery,West
+790,1,2026-03-05,2026-03-11,COD,4,Returned,6,High,Verify Order,North
+791,2,2026-02-07,2026-02-14,Prepaid,3,Returned,7,Medium,Prioritize Delivery,West
+792,2,2026-03-01,2026-03-02,Prepaid,2,Delivered,1,Low,Normal,West
+793,1,2026-03-20,2026-03-25,COD,4,Delivered,5,High,Verify Order,North
+794,2,2026-01-19,2026-01-25,Prepaid,1,Returned,6,Medium,Prioritize Delivery,West
+795,1,2026-03-25,2026-04-04,Prepaid,1,Returned,10,Medium,Prioritize Delivery,North
+796,1,2026-01-08,2026-01-16,COD,3,Returned,8,High,Verify Order,North
+797,2,2026-02-03,2026-02-05,COD,4,Returned,2,Medium,Prioritize Delivery,West
+798,1,2026-03-09,2026-03-19,COD,1,Returned,10,Medium,Prioritize Delivery,North
+799,2,2026-01-18,2026-01-19,COD,5,Returned,1,Medium,Prioritize Delivery,West

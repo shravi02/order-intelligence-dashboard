@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from sqlalchemy import create_engine
 
 # -------------------------
 # PAGE CONFIG
@@ -9,30 +8,21 @@ from sqlalchemy import create_engine
 st.set_page_config(page_title="TintBox Analytics", layout="wide")
 
 # -------------------------
-# 🎨 CLEAN PROFESSIONAL UI
+# LOAD DATA (FINAL)
+# -------------------------
+df = pd.read_csv("data.csv")
+
+# -------------------------
+# 🎨 CLEAN UI
 # -------------------------
 st.markdown("""
 <style>
+.stApp { background-color: #f8fafc; }
+section[data-testid="stSidebar"] { background-color: #e6f4ea; }
 
-/* Background */
-.stApp {
-    background-color: #f8fafc;
-}
+h1 { color: #1b5e20; }
+h2, h3 { color: #2e7d32; }
 
-/* Sidebar */
-section[data-testid="stSidebar"] {
-    background-color: #e6f4ea;
-}
-
-/* Titles */
-h1 {
-    color: #1b5e20;
-}
-h2, h3 {
-    color: #2e7d32;
-}
-
-/* KPI Cards */
 [data-testid="metric-container"] {
     background: white;
     border-radius: 12px;
@@ -40,30 +30,16 @@ h2, h3 {
     border: 1px solid #e0e0e0;
 }
 
-/* Charts background */
-.plot-container {
-    background-color: white !important;
-}
+.plot-container { background-color: white !important; }
 
-/* Buttons */
 button {
     background-color: #2e7d32 !important;
     color: white !important;
 }
 
-/* Dataframe */
-[data-testid="stDataFrame"] {
-    background-color: white;
-}
-
+[data-testid="stDataFrame"] { background-color: white; }
 </style>
 """, unsafe_allow_html=True)
-
-# -------------------------
-# DB CONNECTION
-# -------------------------
-engine = create_engine("mysql+pymysql://root:Shravi%40123@localhost/order_db")
-df = pd.read_sql("SELECT * FROM orders", engine)
 
 # -------------------------
 # HEADER
@@ -180,8 +156,7 @@ st.divider()
 # -------------------------
 st.subheader("🚨 High Risk Orders")
 
-high_risk_df = df[df['risk'] == 'High']
-st.dataframe(high_risk_df.head(20))
+st.dataframe(df[df['risk'] == 'High'].head(20))
 
 st.divider()
 
