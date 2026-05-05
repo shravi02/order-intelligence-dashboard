@@ -7,7 +7,7 @@ import plotly.express as px
 # -------------------------
 st.set_page_config(page_title="TintBox Analytics", layout="wide")
 
-st.write("VERSION: FINAL FIX V6")
+st.write("VERSION: FINAL FIX V7")
 
 # -------------------------
 # LOAD DATA
@@ -15,7 +15,7 @@ st.write("VERSION: FINAL FIX V6")
 df = pd.read_csv("data.csv")
 
 # -------------------------
-# 🔧 DATA CLEANING (SAFE)
+# 🔧 DATA CLEANING
 # -------------------------
 df.columns = df.columns.str.strip()
 
@@ -55,27 +55,35 @@ st.markdown("### 📊 Real-time Order Analytics Dashboard")
 st.divider()
 
 # -------------------------
-# SIDEBAR FILTERS
+# SIDEBAR FILTERS (FIXED)
 # -------------------------
 st.sidebar.header("🔍 Filters")
 
+# Clean filter options
+payment_options = sorted(df['payment_type'].dropna().unique())
+risk_options = sorted(df['risk'].dropna().unique())
+
+# Safe multiselect
 payment = st.sidebar.multiselect(
     "Payment Type",
-    options=df['payment_type'].unique(),
-    default=df['payment_type'].unique()
+    options=payment_options,
+    default=payment_options if payment_options else []
 )
 
 risk = st.sidebar.multiselect(
     "Risk Level",
-    options=df['risk'].unique(),
-    default=df['risk'].unique()
+    options=risk_options,
+    default=risk_options if risk_options else []
 )
 
-df = df[
-    (df['payment_type'].isin(payment)) &
-    (df['risk'].isin(risk))
-]
+# Safe filtering
+if payment:
+    df = df[df['payment_type'].isin(payment)]
 
+if risk:
+    df = df[df['risk'].isin(risk)]
+
+# Stop if empty
 if df.empty:
     st.warning("No data available for selected filters")
     st.stop()
@@ -114,7 +122,7 @@ st.info("💡 Insight: COD + High Delay = Highest RTO Risk")
 st.divider()
 
 # -------------------------
-# CHARTS (THEME ADAPTIVE)
+# CHARTS (THEME SAFE)
 # -------------------------
 colA, colB = st.columns(2)
 
