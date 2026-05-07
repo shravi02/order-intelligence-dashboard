@@ -5,22 +5,22 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 import base64
 
-# -------------------------
+# =====================================================
 # PAGE CONFIG
-# -------------------------
+# =====================================================
 st.set_page_config(
     page_title="TintBox Analytics",
     layout="wide"
 )
 
-# -------------------------
+# =====================================================
 # LOAD DATA
-# -------------------------
+# =====================================================
 df = pd.read_csv("data.csv")
 
-# -------------------------
+# =====================================================
 # DATA CLEANING
-# -------------------------
+# =====================================================
 df.columns = df.columns.str.strip()
 
 df['delay'] = pd.to_numeric(df.get('delay'), errors='coerce')
@@ -32,9 +32,9 @@ df['status'] = df.get('status').fillna("Unknown")
 
 df = df.dropna(subset=['delay'])
 
-# -------------------------
-# LOAD LOGO (HIGH QUALITY)
-# -------------------------
+# =====================================================
+# LOGO LOADER
+# =====================================================
 def get_base64(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
@@ -45,88 +45,121 @@ try:
 except:
     logo_base64 = ""
 
-# -------------------------
+# =====================================================
 # CUSTOM CSS
-# -------------------------
+# =====================================================
 st.markdown("""
 <style>
 
-/* Main container */
+/* Main spacing */
 .block-container {
-    padding-top: 1.5rem;
+    padding-top: 1.2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
 }
 
-/* Header styling */
+/* =====================================================
+HEADER
+===================================================== */
+
+.header-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
 .header-container {
     display: flex;
     align-items: center;
-    gap: 18px;
-    margin-bottom: 10px;
+    justify-content: center;
+    gap: 22px;
 }
 
-/* Logo */
+/* LOGO */
 .logo-img {
-    height: 90px;
+    height: 95px;
     width: auto;
     object-fit: contain;
 }
 
-/* Title */
+/* TITLE */
 .title-text {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 600;
     margin: 0;
+    padding: 0;
     display: flex;
     align-items: center;
-    height: 90px;
+    height: 95px;
+    line-height: 1;
 }
 
 /* KPI Cards */
 [data-testid="metric-container"] {
-    border: 1px solid #e6e6e6;
-    padding: 15px;
-    border-radius: 12px;
+    border: 1px solid #ececec;
+    padding: 18px;
+    border-radius: 14px;
     background-color: #ffffff;
+}
+
+/* Better chart spacing */
+.stPlotlyChart {
+    padding-top: 10px;
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
 
+    .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
     .header-container {
         flex-direction: column;
-        align-items: center;
-        text-align: center;
+        gap: 10px;
     }
 
     .logo-img {
-        height: 75px;
+        height: 80px;
     }
 
     .title-text {
-        font-size: 20px;
         height: auto;
+        font-size: 20px;
+        text-align: center;
     }
 }
+
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------
+# =====================================================
 # HEADER
-# -------------------------
+# =====================================================
 st.markdown(f"""
-<div class="header-container">
-    <img src="data:image/png;base64,{logo_base64}" class="logo-img">
-    <div class="title-text">
-        TintBox Analytics
+<div class="header-wrapper">
+    <div class="header-container">
+
+        <img 
+            src="data:image/png;base64,{logo_base64}" 
+            class="logo-img"
+        >
+
+        <div class="title-text">
+            TintBox Analytics
+        </div>
+
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("---")
 
-# -------------------------
+# =====================================================
 # FILTERS
-# -------------------------
+# =====================================================
 payment_options = sorted(df['payment_type'].unique())
 risk_options = sorted(df['risk'].unique())
 
@@ -155,18 +188,18 @@ if df.empty:
     st.warning("No data available for selected filters")
     st.stop()
 
-# -------------------------
+# =====================================================
 # TABS
-# -------------------------
+# =====================================================
 tab1, tab2, tab3 = st.tabs([
     "Dashboard",
     "Data Explorer",
     "Prediction"
 ])
 
-# ====================================================
-# DASHBOARD TAB
-# ====================================================
+# =====================================================
+# DASHBOARD
+# =====================================================
 with tab1:
 
     total_orders = len(df)
@@ -237,7 +270,7 @@ with tab1:
 
     st.markdown("---")
 
-    # HIGH RISK ORDERS
+    # HIGH RISK TABLE
     st.subheader("High Risk Orders")
 
     st.dataframe(
@@ -245,9 +278,9 @@ with tab1:
         use_container_width=True
     )
 
-# ====================================================
-# DATA EXPLORER TAB
-# ====================================================
+# =====================================================
+# DATA EXPLORER
+# =====================================================
 with tab2:
 
     st.subheader("Dataset")
@@ -257,23 +290,21 @@ with tab2:
         use_container_width=True
     )
 
-# ====================================================
-# ML PREDICTION TAB
-# ====================================================
+# =====================================================
+# ML PREDICTION
+# =====================================================
 with tab3:
 
     st.subheader("Return Prediction Model")
 
-    # Target column
+    # Target
     df['target'] = df['status'].apply(
         lambda x: 1 if x == "Returned" else 0
     )
 
-    # Features
     X = df[['delay', 'attempts']]
     y = df['target']
 
-    # Train model
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
@@ -284,7 +315,6 @@ with tab3:
     model = RandomForestClassifier()
     model.fit(X_train, y_train)
 
-    # Inputs
     delay_input = st.slider(
         "Delay (days)",
         0,
@@ -299,7 +329,6 @@ with tab3:
         2
     )
 
-    # Prediction
     if st.button("Predict Return Risk"):
 
         prediction = model.predict(
