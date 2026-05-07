@@ -1,180 +1,125 @@
+# Full Upgraded Streamlit App Structure
+
+Replace your current `app.py` with this structure step by step.
+
+```python
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-import base64
+from sklearn.metrics import accuracy_score
 
-# -------------------------
+# =====================================================
 # PAGE CONFIG
-# -------------------------
+# =====================================================
 st.set_page_config(
-    page_title="Smart RTO & Delivery Analytics",
+    page_title="Logistics Intelligence System",
     layout="wide"
 )
 
-# -------------------------
+# =====================================================
 # LOAD DATA
-# -------------------------
-df = pd.read_csv("data.csv")
+# =====================================================
+DEFAULT_FILE = "data.csv"
 
-# -------------------------
+uploaded_file = st.sidebar.file_uploader(
+    "Upload Dataset",
+    type=["csv"]
+)
+
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+else:
+    df = pd.read_csv(DEFAULT_FILE)
+
+# =====================================================
 # DATA CLEANING
-# -------------------------
+# =====================================================
 df.columns = df.columns.str.strip()
 
-df['delay'] = pd.to_numeric(df.get('delay'), errors='coerce')
-df['attempts'] = pd.to_numeric(df.get('attempts'), errors='coerce')
+# Numeric conversion
+numeric_cols = ['delay', 'attempts']
 
-df['risk'] = df.get('risk').fillna("Unknown")
-df['payment_type'] = df.get('payment_type').fillna("Unknown")
-df['status'] = df.get('status').fillna("Unknown")
+for col in numeric_cols:
+    if col in df.columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
 
-df = df.dropna(subset=['delay'])
+# Remove null delay rows
+if 'delay' in df.columns:
+    df = df.dropna(subset=['delay'])
 
-# -------------------------
-# LOAD LOGO (HIGH QUALITY)
-# -------------------------
-def get_base64(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
+# Fill missing text values
+text_cols = ['risk', 'payment_type', 'status']
 
-try:
-    logo_base64 = get_base64("logo.png")
-except:
-    logo_base64 = ""
+for col in text_cols:
+    if col in df.columns:
+        df[col] = df[col].fillna('Unknown')
 
-# -------------------------
-# CUSTOM CSS
-# -------------------------
-st.markdown("""
-<style>
-
-/* Main container */
-.block-container {
-    padding-top: 1.5rem;
-}
-
-/* Header styling */
-.header-container {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-bottom: 10px;
-}
-
-/* Logo */
-.logo-img {
-    height: 90px;
-    width: auto;
-    object-fit: contain;
-}
-
-/* Title */
-.title-text {
-    font-size: 24px;
-    font-weight: 600;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    height: 90px;
-}
-
-/* KPI Cards */
-[data-testid="metric-container"] {
-    border: 1px solid #e6e6e6;
-    padding: 15px;
-    border-radius: 12px;
-    background-color: #ffffff;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-
-    .header-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .logo-img {
-        height: 75px;
-    }
-
-    .title-text {
-        font-size: 20px;
-        height: auto;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-# -------------------------
+# =====================================================
 # HEADER
-# -------------------------
-st.markdown(f"""
-<div class="header-container">
-    <img src="data:image/png;base64,{logo_base64}" class="logo-img">
-    <div class="title-text">
+# =====================================================
+st.markdown(
+    """
+    <h1 style='text-align:center;'>
         Logistics Intelligence System
-    </div>
-</div>
-""", unsafe_allow_html=True)
+    </h1>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown("---")
 
-# -------------------------
+# =====================================================
+# SIDEBAR NAVIGATION
+# =====================================================
+section = st.sidebar.radio(
+    "Navigation",
+    [
+        "Dashboard",
+        "Advanced Analytics",
+        "ML Prediction",
+        "Download Reports",
+        "Upload Dataset"
+    ]
+)
+
+# =====================================================
 # FILTERS
-# -------------------------
-payment_options = sorted(df['payment_type'].unique())
-risk_options = sorted(df['risk'].unique())
+# =====================================================
+st.sidebar.markdown("---")
+st.sidebar.subheader("Filters")
 
-with st.expander("Filters", expanded=False):
+payment = st.sidebar.multiselect(
+    "Payment Type",
+    options=sorted(df['payment_type'].unique()),
+    default=sorted(df['payment_type'].unique())
+)
 
-    payment = st.multiselect(
-        "Payment Type",
-        payment_options,
-        default=payment_options
-    )
-
-    risk = st.multiselect(
-        "Risk Level",
-        risk_options,
-        default=risk_options
-    )
+risk = st.sidebar.multiselect(
+    "Risk Level",
+    options=sorted(df['risk'].unique()),
+    default=sorted(df['risk'].unique())
+)
 
 # Apply filters
-if payment:
-    df = df[df['payment_type'].isin(payment)]
+filtered_df = df[
+    (df['payment_type'].isin(payment)) &
+    (df['risk'].isin(risk))
+]
 
-if risk:
-    df = df[df['risk'].isin(risk)]
+# =====================================================
+# DASHBOARD
+# =====================================================
+if section == "Dashboard":
 
-if df.empty:
-    st.warning("No data available for selected filters")
-    st.stop()
+    st.header("Dashboard")
 
-# -------------------------
-# TABS
-# -------------------------
-tab1, tab2, tab3 = st.tabs([
-    "Dashboard",
-    "Data Explorer",
-    "Prediction"
-])
-
-# ====================================================
-# DASHBOARD TAB
-# ====================================================
-with tab1:
-
-    total_orders = len(df)
-    returned = len(df[df['status'] == 'Returned'])
+    total_orders = len(filtered_df)
+    returned = len(filtered_df[filtered_df['status'] == 'Returned'])
     rto = (returned / total_orders) * 100 if total_orders > 0 else 0
-    avg_delay = df['delay'].mean()
+    avg_delay = filtered_df['delay'].mean()
 
-    # KPI ROW
     col1, col2, col3, col4 = st.columns(4)
 
     col1.metric("Total Orders", total_orders)
@@ -184,96 +129,83 @@ with tab1:
 
     st.markdown("---")
 
-    # INSIGHTS
-    st.subheader("Key Insights")
+    c1, c2 = st.columns(2)
 
-    if rto > 50:
-        st.error("High return rate detected")
-    elif rto > 30:
-        st.warning("Moderate return rate")
-    else:
-        st.success("Return rate under control")
-
-    st.markdown("---")
-
-    # CHARTS
-    colA, colB = st.columns(2)
-
-    with colA:
-        fig1 = px.bar(
-            df,
-            x="risk",
-            color="risk",
-            title="Risk Distribution"
+    with c1:
+        fig1 = px.histogram(
+            filtered_df,
+            x='risk',
+            color='risk',
+            title='Risk Distribution'
         )
 
-        fig1.update_layout(template="plotly")
         st.plotly_chart(fig1, use_container_width=True)
 
-    with colB:
+    with c2:
         fig2 = px.histogram(
-            df,
-            x="delay",
-            title="Delay Distribution"
+            filtered_df,
+            x='delay',
+            title='Delay Distribution'
         )
 
-        fig2.update_layout(template="plotly")
         st.plotly_chart(fig2, use_container_width=True)
 
-    st.markdown("---")
+# =====================================================
+# ADVANCED ANALYTICS
+# =====================================================
+elif section == "Advanced Analytics":
 
-    # PAYMENT ANALYSIS
-    fig3 = px.histogram(
-        df,
-        x="payment_type",
-        color="status",
-        barmode="group",
-        title="Payment vs Returns"
+    st.header("Advanced Analytics")
+
+    # Scatter Plot
+    fig3 = px.scatter(
+        filtered_df,
+        x='delay',
+        y='attempts',
+        color='risk',
+        title='Delay vs Attempts'
     )
-
-    fig3.update_layout(template="plotly")
 
     st.plotly_chart(fig3, use_container_width=True)
 
-    st.markdown("---")
-
-    # HIGH RISK ORDERS
-    st.subheader("High Risk Orders")
-
-    st.dataframe(
-        df[df['risk'] == 'High'].head(20),
-        use_container_width=True
+    # Payment Analysis
+    fig4 = px.histogram(
+        filtered_df,
+        x='payment_type',
+        color='status',
+        barmode='group',
+        title='Payment vs Returns'
     )
 
-# ====================================================
-# DATA EXPLORER TAB
-# ====================================================
-with tab2:
+    st.plotly_chart(fig4, use_container_width=True)
 
-    st.subheader("Dataset")
-
-    st.dataframe(
-        df,
-        use_container_width=True
+    # Box Plot
+    fig5 = px.box(
+        filtered_df,
+        x='risk',
+        y='delay',
+        color='risk',
+        title='Delay Distribution by Risk'
     )
 
-# ====================================================
-# ML PREDICTION TAB
-# ====================================================
-with tab3:
+    st.plotly_chart(fig5, use_container_width=True)
 
-    st.subheader("Return Prediction Model")
+# =====================================================
+# ML PREDICTION
+# =====================================================
+elif section == "ML Prediction":
 
-    # Target column
-    df['target'] = df['status'].apply(
-        lambda x: 1 if x == "Returned" else 0
+    st.header("ML Prediction")
+
+    model_df = filtered_df.copy()
+
+    model_df['target'] = model_df['status'].apply(
+        lambda x: 1 if x == 'Returned' else 0
     )
 
-    # Features
-    X = df[['delay', 'attempts']]
-    y = df['target']
+    X = model_df[['delay', 'attempts']]
+    y = model_df['target']
 
-    # Train model
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
@@ -284,9 +216,19 @@ with tab3:
     model = RandomForestClassifier()
     model.fit(X_train, y_train)
 
-    # Inputs
+    predictions = model.predict(X_test)
+
+    accuracy = accuracy_score(y_test, predictions)
+
+    st.metric(
+        "Model Accuracy",
+        f"{accuracy*100:.2f}%"
+    )
+
+    st.markdown("---")
+
     delay_input = st.slider(
-        "Delay (days)",
+        "Delivery Delay",
         0,
         15,
         5
@@ -299,14 +241,91 @@ with tab3:
         2
     )
 
-    # Prediction
     if st.button("Predict Return Risk"):
 
-        prediction = model.predict(
+        result = model.predict(
             [[delay_input, attempts_input]]
         )[0]
 
-        if prediction == 1:
-            st.error("High probability of return")
+        if result == 1:
+            st.error("High Return Risk")
         else:
-            st.success("Likely to be delivered")
+            st.success("Low Return Risk")
+
+# =====================================================
+# DOWNLOAD REPORTS
+# =====================================================
+elif section == "Download Reports":
+
+    st.header("Download Reports")
+
+    csv = filtered_df.to_csv(index=False)
+
+    st.download_button(
+        label="Download Filtered CSV",
+        data=csv,
+        file_name="analytics_report.csv",
+        mime="text/csv"
+    )
+
+    high_risk_csv = filtered_df[
+        filtered_df['risk'] == 'High'
+    ].to_csv(index=False)
+
+    st.download_button(
+        label="Download High Risk Orders",
+        data=high_risk_csv,
+        file_name="high_risk_orders.csv",
+        mime="text/csv"
+    )
+
+# =====================================================
+# UPLOAD DATASET
+# =====================================================
+elif section == "Upload Dataset":
+
+    st.header("Upload Dataset")
+
+    st.write(
+        "Upload a CSV file to analyze logistics and return performance."
+    )
+
+    if uploaded_file is not None:
+
+        st.success("Dataset uploaded successfully")
+
+        st.dataframe(
+            df.head(),
+            use_container_width=True
+        )
+
+        st.write("Rows:", df.shape[0])
+        st.write("Columns:", df.shape[1])
+
+    else:
+
+        st.info("Currently using default dataset")
+```
+
+# IMPORTANT
+
+Update your `requirements.txt`:
+
+```txt
+streamlit
+pandas
+plotly
+scikit-learn
+```
+
+# AFTER SAVING
+
+Run:
+
+```bash
+git add .
+git commit -m "Upgraded Logistics Intelligence System"
+git push
+```
+
+Then reboot the Streamlit app.
