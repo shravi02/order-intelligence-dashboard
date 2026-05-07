@@ -1,33 +1,56 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import base64
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
-# ---------------- PAGE CONFIG ----------------
+# =====================================================
+# PAGE CONFIG
+# =====================================================
 st.set_page_config(
     page_title="Logistics Intelligence System",
     layout="wide"
 )
 
-# ---------------- LOAD LOGO ----------------
-def get_base64(bin_file):
-    with open(bin_file, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
+# =====================================================
+# LOAD DATA
+# =====================================================
+DEFAULT_FILE = "data.csv"
 
-logo_base64 = get_base64("logo.png")
+uploaded_file = st.sidebar.file_uploader(
+    "Upload Dataset",
+    type=["csv"]
+)
 
-# ---------------- LOAD DATA ----------------
-df = pd.read_csv("data.csv")
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+else:
+    df = pd.read_csv(DEFAULT_FILE)
 
-df = df.dropna()
+# =====================================================
+# DATA CLEANING
+# =====================================================
+df.columns = df.columns.str.strip()
 
-df["delay"] = pd.to_numeric(df["delay"], errors="coerce")
-df["attempts"] = pd.to_numeric(df["attempts"], errors="coerce")
+numeric_cols = ['delay', 'attempts']
 
-df = df.dropna(subset=["delay"])
+for col in numeric_cols:
+    if col in df.columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
 
-# ---------------- CUSTOM CSS ----------------
+if 'delay' in df.columns:
+    df = df.dropna(subset=['delay'])
+
+text_cols = ['risk', 'payment_type', 'status']
+
+for col in text_cols:
+    if col in df.columns:
+        df[col] = df[col].fillna('Unknown')
+
+# =====================================================
+# CUSTOM CSS
+# =====================================================
 st.markdown("""
 <style>
 
@@ -36,262 +59,307 @@ st.markdown("""
     background-color: #f8fafc;
 }
 
-/* Remove extra top spacing */
+/* Page Padding */
 .block-container {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-}
-
-/* Header */
-.header-container {
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-
-/* Logo */
-.logo-img {
-    width: 220px;
-    margin-bottom: 10px;
+    padding-top: 1.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 /* Title */
-.title-text {
-    font-size: 38px;
+.main-title {
+    text-align: center;
+    font-size: 40px;
     font-weight: 700;
     color: #1e293b;
-    margin-top: 10px;
+    margin-bottom: 25px;
 }
 
-/* Metric cards */
+/* Metric Cards */
 [data-testid="metric-container"] {
     background: white;
     border-radius: 14px;
-    padding: 15px;
+    padding: 18px;
     border: 1px solid #e5e7eb;
 }
 
 /* Charts */
-.plot-container {
-    border-radius: 12px;
-    overflow: hidden;
+.stPlotlyChart {
+    background: white;
+    border-radius: 14px;
+    padding: 10px;
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
 
-    .logo-img {
-        width: 160px;
+    .main-title {
+        font-size: 28px;
     }
 
-    .title-text {
-        font-size: 28px;
+    .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- HEADER ----------------
+# =====================================================
+# HEADER
+# =====================================================
 st.markdown(
-    f"""
-    <div class="header-container">
-
-        <img class="logo-img"
-        src="data:image/png;base64,{logo_base64}">
-
-        <div class="title-text">
-            Logistics Intelligence System
-        </div>
-
+    """
+    <div class="main-title">
+        Logistics Intelligence System
     </div>
     """,
     unsafe_allow_html=True
 )
 
-st.divider()
+st.markdown("---")
 
-# ---------------- FILTERS ----------------
-with st.expander("Filters", expanded=False):
+# =====================================================
+# SIDEBAR NAVIGATION
+# =====================================================
+section = st.sidebar.radio(
+    "Navigation",
+    [
+        "Dashboard",
+        "Advanced Analytics",
+        "ML Prediction",
+        "Download Reports",
+        "Upload Dataset"
+    ]
+)
 
-    col1, col2 = st.columns(2)
+# =====================================================
+# FILTERS
+# =====================================================
+st.sidebar.markdown("---")
+st.sidebar.subheader("Filters")
 
-    with col1:
-        payment = st.multiselect(
-            "Payment Type",
-            options=df["payment_type"].unique(),
-            default=df["payment_type"].unique()
-        )
+payment = st.sidebar.multiselect(
+    "Payment Type",
+    options=sorted(df['payment_type'].unique()),
+    default=sorted(df['payment_type'].unique())
+)
 
-    with col2:
-        risk = st.multiselect(
-            "Risk Level",
-            options=df["risk"].unique(),
-            default=df["risk"].unique()
-        )
+risk = st.sidebar.multiselect(
+    "Risk Level",
+    options=sorted(df['risk'].unique()),
+    default=sorted(df['risk'].unique())
+)
 
-# ---------------- APPLY FILTERS ----------------
-df = df[
-    (df["payment_type"].isin(payment)) &
-    (df["risk"].isin(risk))
+# Apply filters
+filtered_df = df[
+    (df['payment_type'].isin(payment)) &
+    (df['risk'].isin(risk))
 ]
 
-# ---------------- KPIs ----------------
-total_orders = len(df)
-returned = len(df[df["status"] == "Returned"])
+if filtered_df.empty:
+    st.warning("No data available for selected filters")
+    st.stop()
 
-rto = (returned / total_orders) * 100 if total_orders > 0 else 0
+# =====================================================
+# DASHBOARD
+# =====================================================
+if section == "Dashboard":
 
-avg_delay = df["delay"].mean()
+    st.header("Dashboard")
 
-k1, k2, k3, k4 = st.columns(4)
+    total_orders = len(filtered_df)
+    returned = len(filtered_df[filtered_df['status'] == 'Returned'])
 
-k1.metric("Total Orders", total_orders)
-k2.metric("Returned Orders", returned)
-k3.metric("RTO %", f"{rto:.2f}%")
-k4.metric("Average Delay", f"{avg_delay:.2f} days")
-
-st.divider()
-
-# ---------------- INSIGHTS ----------------
-st.subheader("Key Insights")
-
-if rto > 50:
-    st.error("High return rate detected")
-
-elif rto > 30:
-    st.warning("Moderate return rate detected")
-
-else:
-    st.success("Return rate is stable")
-
-st.divider()
-
-# ---------------- CHARTS ----------------
-c1, c2 = st.columns(2)
-
-with c1:
-
-    fig1 = px.histogram(
-        df,
-        x="risk",
-        color="risk",
-        title="Risk Distribution",
-        color_discrete_map={
-            "High": "#ef4444",
-            "Medium": "#f59e0b",
-            "Low": "#22c55e"
-        }
+    rto = (
+        (returned / total_orders) * 100
+        if total_orders > 0 else 0
     )
 
-    fig1.update_layout(
-        paper_bgcolor="white",
-        plot_bgcolor="white"
+    avg_delay = filtered_df['delay'].mean()
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    col1.metric("Total Orders", total_orders)
+    col2.metric("Returned Orders", returned)
+    col3.metric("RTO %", f"{rto:.2f}%")
+    col4.metric("Average Delay", f"{avg_delay:.2f} days")
+
+    st.markdown("---")
+
+    c1, c2 = st.columns(2)
+
+    with c1:
+
+        fig1 = px.histogram(
+            filtered_df,
+            x='risk',
+            color='risk',
+            title='Risk Distribution'
+        )
+
+        st.plotly_chart(fig1, use_container_width=True)
+
+    with c2:
+
+        fig2 = px.histogram(
+            filtered_df,
+            x='delay',
+            title='Delay Distribution'
+        )
+
+        st.plotly_chart(fig2, use_container_width=True)
+
+# =====================================================
+# ADVANCED ANALYTICS
+# =====================================================
+elif section == "Advanced Analytics":
+
+    st.header("Advanced Analytics")
+
+    fig3 = px.scatter(
+        filtered_df,
+        x='delay',
+        y='attempts',
+        color='risk',
+        title='Delay vs Attempts'
     )
 
-    st.plotly_chart(fig1, use_container_width=True)
+    st.plotly_chart(fig3, use_container_width=True)
 
-with c2:
-
-    fig2 = px.histogram(
-        df,
-        x="delay",
-        title="Delay Distribution",
-        color_discrete_sequence=["#2563eb"]
+    fig4 = px.histogram(
+        filtered_df,
+        x='payment_type',
+        color='status',
+        barmode='group',
+        title='Payment vs Returns'
     )
 
-    fig2.update_layout(
-        paper_bgcolor="white",
-        plot_bgcolor="white"
+    st.plotly_chart(fig4, use_container_width=True)
+
+    fig5 = px.box(
+        filtered_df,
+        x='risk',
+        y='delay',
+        color='risk',
+        title='Delay Distribution by Risk'
     )
 
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig5, use_container_width=True)
 
-st.divider()
+# =====================================================
+# ML PREDICTION
+# =====================================================
+elif section == "ML Prediction":
 
-# ---------------- PAYMENT ANALYSIS ----------------
-st.subheader("Payment vs Returns")
+    st.header("ML Prediction")
 
-fig3 = px.histogram(
-    df,
-    x="payment_type",
-    color="status",
-    barmode="group",
-    color_discrete_map={
-        "Returned": "#ef4444",
-        "Delivered": "#22c55e"
-    }
-)
+    model_df = filtered_df.copy()
 
-fig3.update_layout(
-    paper_bgcolor="white",
-    plot_bgcolor="white"
-)
-
-st.plotly_chart(fig3, use_container_width=True)
-
-st.divider()
-
-# ---------------- ML PREDICTION ----------------
-st.subheader("ML Prediction")
-
-delay_input = st.slider(
-    "Delivery Delay (Days)",
-    1,
-    15,
-    5
-)
-
-if delay_input > 7:
-    st.error("Prediction: High Return Risk")
-
-elif delay_input > 4:
-    st.warning("Prediction: Medium Return Risk")
-
-else:
-    st.success("Prediction: Low Return Risk")
-
-st.divider()
-
-# ---------------- DOWNLOAD REPORT ----------------
-st.subheader("Download Reports")
-
-csv = df.to_csv(index=False)
-
-st.download_button(
-    label="Download CSV Report",
-    data=csv,
-    file_name="logistics_report.csv",
-    mime="text/csv"
-)
-
-st.divider()
-
-# ---------------- UPLOAD DATASET ----------------
-st.subheader("Upload Dataset")
-
-uploaded_file = st.file_uploader(
-    "Upload CSV File",
-    type=["csv"]
-)
-
-if uploaded_file is not None:
-
-    uploaded_df = pd.read_csv(uploaded_file)
-
-    st.success("Dataset Uploaded Successfully")
-
-    st.dataframe(
-        uploaded_df.head(),
-        use_container_width=True
+    model_df['target'] = model_df['status'].apply(
+        lambda x: 1 if x == 'Returned' else 0
     )
 
-st.divider()
+    X = model_df[['delay', 'attempts']]
+    y = model_df['target']
 
-# ---------------- HIGH RISK ORDERS ----------------
-st.subheader("High Risk Orders")
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=42
+    )
 
-st.dataframe(
-    df[df["risk"] == "High"].head(20),
-    use_container_width=True
-)
+    model = RandomForestClassifier()
+    model.fit(X_train, y_train)
+
+    predictions = model.predict(X_test)
+
+    accuracy = accuracy_score(y_test, predictions)
+
+    st.metric(
+        "Model Accuracy",
+        f"{accuracy*100:.2f}%"
+    )
+
+    st.markdown("---")
+
+    delay_input = st.slider(
+        "Delivery Delay",
+        0,
+        15,
+        5
+    )
+
+    attempts_input = st.slider(
+        "Delivery Attempts",
+        1,
+        5,
+        2
+    )
+
+    if st.button("Predict Return Risk"):
+
+        result = model.predict(
+            [[delay_input, attempts_input]]
+        )[0]
+
+        if result == 1:
+            st.error("High Return Risk")
+        else:
+            st.success("Low Return Risk")
+
+# =====================================================
+# DOWNLOAD REPORTS
+# =====================================================
+elif section == "Download Reports":
+
+    st.header("Download Reports")
+
+    csv = filtered_df.to_csv(index=False)
+
+    st.download_button(
+        label="Download Filtered CSV",
+        data=csv,
+        file_name="analytics_report.csv",
+        mime="text/csv"
+    )
+
+    high_risk_csv = filtered_df[
+        filtered_df['risk'] == 'High'
+    ].to_csv(index=False)
+
+    st.download_button(
+        label="Download High Risk Orders",
+        data=high_risk_csv,
+        file_name="high_risk_orders.csv",
+        mime="text/csv"
+    )
+
+# =====================================================
+# UPLOAD DATASET
+# =====================================================
+elif section == "Upload Dataset":
+
+    st.header("Upload Dataset")
+
+    st.write(
+        "Upload a CSV file to analyze logistics and return performance."
+    )
+
+    if uploaded_file is not None:
+
+        st.success("Dataset uploaded successfully")
+
+        st.dataframe(
+            df.head(),
+            use_container_width=True
+        )
+
+        st.write("Rows:", df.shape[0])
+        st.write("Columns:", df.shape[1])
+
+    else:
+
+        st.info("Currently using default dataset")
