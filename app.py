@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
 # -------------------------
-# PAGE CONFIG (RESPONSIVE)
+# PAGE CONFIG
 # -------------------------
 st.set_page_config(page_title="TintBox Analytics", layout="wide")
 
@@ -29,24 +29,30 @@ df['status'] = df.get('status').fillna("Unknown")
 df = df.dropna(subset=['delay'])
 
 # -------------------------
-# HEADER WITH LOGO (FIXED)
+# HEADER (CENTERED CLEAN UI)
 # -------------------------
-col_logo, col_title = st.columns([1, 6])
+col1, col2, col3 = st.columns([2, 3, 2])
 
-with col_logo:
+with col2:
     try:
-        st.image("logo.png", use_container_width=True)
+        st.image("logo.png", width=180)
     except:
         pass
 
-with col_title:
-    st.title("TintBox Analytics")
-    st.caption("Order Intelligence Dashboard")
+    st.markdown(
+        """
+        <h2 style='text-align: center; margin-top: 10px; font-weight: 600;'>
+            TintBox Analytics
+        </h2>
+        """,
+        unsafe_allow_html=True
+    )
 
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 
 # -------------------------
-# FILTERS (RESPONSIVE)
+# FILTERS
 # -------------------------
 payment_options = sorted(df['payment_type'].unique())
 risk_options = sorted(df['risk'].unique())
@@ -75,7 +81,7 @@ tab1, tab2, tab3 = st.tabs([
 ])
 
 # =========================
-# TAB 1: DASHBOARD
+# DASHBOARD
 # =========================
 with tab1:
 
@@ -84,7 +90,6 @@ with tab1:
     rto = (returned / total_orders) * 100 if total_orders > 0 else 0
     avg_delay = df['delay'].mean()
 
-    # KPI ROW (AUTO RESPONSIVE)
     col1, col2, col3, col4 = st.columns(4)
 
     col1.metric("Total Orders", total_orders)
@@ -105,7 +110,6 @@ with tab1:
 
     st.markdown("---")
 
-    # CHARTS (RESPONSIVE GRID)
     colA, colB = st.columns(2)
 
     with colA:
@@ -136,14 +140,14 @@ with tab1:
     st.dataframe(df[df['risk'] == 'High'].head(20), use_container_width=True)
 
 # =========================
-# TAB 2: DATA EXPLORER
+# DATA EXPLORER
 # =========================
 with tab2:
     st.subheader("Dataset")
     st.dataframe(df, use_container_width=True)
 
 # =========================
-# TAB 3: ML PREDICTION
+# ML PREDICTION
 # =========================
 with tab3:
 
