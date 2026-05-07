@@ -140,6 +140,7 @@ MOBILE RESPONSIVE
 # =====================================================
 # HEADER
 # =====================================================
+
 st.markdown(
     """
     <div class="header-container">
@@ -147,7 +148,7 @@ st.markdown(
         <img
             class="logo-img"
             src="https://tintbox.in/cdn/shop/files/TintBox_Logo.png?v=1679057052"
-        >
+        />
 
         <div class="title-text">
             TintBox Analytics
