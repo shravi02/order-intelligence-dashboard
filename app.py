@@ -110,28 +110,30 @@ st.markdown("""
 # =====================================================
 # HEADER
 # =====================================================
-st.markdown(f"""
-<div style='text-align:center; margin-bottom:20px;'>
+st.markdown(
+    f"""
+    <div style='text-align:center; margin-bottom:20px;'>
 
-    <img 
-        src='data:image/png;base64,{logo_base64}'
-        width='120'
-    >
+        <img 
+            src='data:image/png;base64,{logo_base64}'
+            width='120'
+        >
 
-    <h1 style='
-        margin-top:10px;
-        font-size:38px;
-        font-weight:700;
-        color:#1e293b;
-    '>
-        Logistics Intelligence System
-    </h1>
+        <h1 style='
+            margin-top:10px;
+            font-size:38px;
+            font-weight:700;
+            color:#1e293b;
+        '>
+            Logistics Intelligence System
+        </h1>
 
-</div>
-""", unsafe_allow_html=True)
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown("---")
-
 # =====================================================
 # SIDEBAR NAVIGATION
 # =====================================================
