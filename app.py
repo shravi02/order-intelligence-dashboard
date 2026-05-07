@@ -9,7 +9,7 @@ import base64
 # PAGE CONFIG
 # -------------------------
 st.set_page_config(
-    page_title="TintBox Analytics",
+    page_title="Smart RTO & Delivery Analytics",
     layout="wide"
 )
 
