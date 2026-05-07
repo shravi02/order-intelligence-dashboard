@@ -2,15 +2,22 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# ---------------- PAGE CONFIG ----------------
+# =====================================================
+# PAGE CONFIG
+# =====================================================
 st.set_page_config(
     page_title="TintBox Analytics",
     layout="wide"
 )
 
-# ---------------- LOAD DATA ----------------
+# =====================================================
+# LOAD DATA
+# =====================================================
 df = pd.read_csv("data.csv")
 
+# =====================================================
+# DATA CLEANING
+# =====================================================
 df = df.dropna()
 
 df["delay"] = pd.to_numeric(df["delay"], errors="coerce")
@@ -18,98 +25,144 @@ df["attempts"] = pd.to_numeric(df["attempts"], errors="coerce")
 
 df = df.dropna(subset=["delay"])
 
-# ---------------- CUSTOM CSS ----------------
+# =====================================================
+# CUSTOM CSS
+# =====================================================
 st.markdown("""
 <style>
 
-/* Main app */
+/* =====================================================
+MAIN APP
+===================================================== */
+
 .stApp {
     background-color: #f8fafc;
 }
 
-/* Remove extra top spacing */
 .block-container {
     padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: 100%;
 }
 
-/* Header */
+/* =====================================================
+HEADER
+===================================================== */
+
 .header-container {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 25px;
+    gap: 40px;
     margin-top: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+    margin-bottom: 25px;
+    flex-wrap: nowrap;
 }
 
 /* Logo */
 .logo-img {
-    height: 90px;
+    height: 110px;
     width: auto;
+    object-fit: contain;
 }
 
 /* Title */
 .title-text {
-    font-size: 42px;
+    font-size: 34px;
     font-weight: 700;
     color: #1e293b;
     margin: 0;
+    padding: 0;
+    text-align: center;
+    line-height: 1.1;
 }
 
-/* Mobile Responsive */
+/* =====================================================
+METRIC CARDS
+===================================================== */
+
+[data-testid="metric-container"] {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+/* =====================================================
+CHARTS
+===================================================== */
+
+.stPlotlyChart {
+    background: white;
+    border-radius: 14px;
+    padding: 10px;
+}
+
+/* =====================================================
+TABLE
+===================================================== */
+
+[data-testid="stDataFrame"] {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* =====================================================
+MOBILE RESPONSIVE
+===================================================== */
+
 @media (max-width: 768px) {
 
     .header-container {
         flex-direction: column;
-        text-align: center;
         gap: 10px;
     }
 
     .logo-img {
-        height: 70px;
+        height: 85px;
     }
 
     .title-text {
-        font-size: 30px;
+        font-size: 28px;
     }
-}
 
-/* Metric cards */
-[data-testid="metric-container"] {
-    background: white;
-    border-radius: 14px;
-    padding: 15px;
-    border: 1px solid #e5e7eb;
-}
-
-/* Charts */
-.plot-container {
-    border-radius: 12px;
-    overflow: hidden;
+    .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- HEADER ----------------
-st.markdown("""
-<div class="header-container">
+# =====================================================
+# HEADER
+# =====================================================
+st.markdown(
+    """
+    <div class="header-container">
 
-    <img class="logo-img"
-    src="https://tintbox.in/cdn/shop/files/TintBox_Logo.png">
+        <img
+            class="logo-img"
+            src="https://tintbox.in/cdn/shop/files/TintBox_Logo.png?v=1679057052"
+        >
 
-    <h1 class="title-text">
-        TintBox Analytics
-    </h1>
+        <div class="title-text">
+            TintBox Analytics
+        </div>
 
-</div>
-""", unsafe_allow_html=True)
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 st.divider()
 
-# ---------------- FILTERS ----------------
+# =====================================================
+# FILTERS
+# =====================================================
 with st.expander("Filters", expanded=False):
 
     col1, col2 = st.columns(2)
@@ -117,24 +170,32 @@ with st.expander("Filters", expanded=False):
     with col1:
         payment = st.multiselect(
             "Payment Type",
-            options=df["payment_type"].unique(),
-            default=df["payment_type"].unique()
+            options=sorted(df["payment_type"].unique()),
+            default=sorted(df["payment_type"].unique())
         )
 
     with col2:
         risk = st.multiselect(
             "Risk Level",
-            options=df["risk"].unique(),
-            default=df["risk"].unique()
+            options=sorted(df["risk"].unique()),
+            default=sorted(df["risk"].unique())
         )
 
-# Apply filters
+# =====================================================
+# APPLY FILTERS
+# =====================================================
 df = df[
     (df["payment_type"].isin(payment)) &
     (df["risk"].isin(risk))
 ]
 
-# ---------------- KPIs ----------------
+if df.empty:
+    st.warning("No data available for selected filters")
+    st.stop()
+
+# =====================================================
+# KPI SECTION
+# =====================================================
 total_orders = len(df)
 returned = len(df[df["status"] == "Returned"])
 rto = (returned / total_orders) * 100
@@ -149,7 +210,9 @@ k4.metric("Average Delay", f"{avg_delay:.2f} days")
 
 st.divider()
 
-# ---------------- INSIGHTS ----------------
+# =====================================================
+# INSIGHTS
+# =====================================================
 st.subheader("Key Insights")
 
 if rto > 50:
@@ -161,7 +224,9 @@ else:
 
 st.divider()
 
-# ---------------- CHARTS ----------------
+# =====================================================
+# CHARTS
+# =====================================================
 c1, c2 = st.columns(2)
 
 with c1:
@@ -180,7 +245,8 @@ with c1:
 
     fig1.update_layout(
         paper_bgcolor="white",
-        plot_bgcolor="white"
+        plot_bgcolor="white",
+        font=dict(color="#111827")
     )
 
     st.plotly_chart(fig1, use_container_width=True)
@@ -196,14 +262,17 @@ with c2:
 
     fig2.update_layout(
         paper_bgcolor="white",
-        plot_bgcolor="white"
+        plot_bgcolor="white",
+        font=dict(color="#111827")
     )
 
     st.plotly_chart(fig2, use_container_width=True)
 
 st.divider()
 
-# ---------------- PAYMENT ANALYSIS ----------------
+# =====================================================
+# PAYMENT ANALYSIS
+# =====================================================
 st.subheader("Payment vs Returns")
 
 fig3 = px.histogram(
@@ -219,17 +288,25 @@ fig3 = px.histogram(
 
 fig3.update_layout(
     paper_bgcolor="white",
-    plot_bgcolor="white"
+    plot_bgcolor="white",
+    font=dict(color="#111827")
 )
 
 st.plotly_chart(fig3, use_container_width=True)
 
 st.divider()
 
-# ---------------- PREDICTION ----------------
+# =====================================================
+# PREDICTION SECTION
+# =====================================================
 st.subheader("Prediction")
 
-delay_input = st.slider("Delivery Delay", 1, 15, 5)
+delay_input = st.slider(
+    "Delivery Delay",
+    1,
+    15,
+    5
+)
 
 if delay_input > 7:
     st.error("Prediction: High Return Risk")
@@ -240,7 +317,9 @@ else:
 
 st.divider()
 
-# ---------------- DATA TABLE ----------------
+# =====================================================
+# TABLE
+# =====================================================
 st.subheader("High Risk Orders")
 
 st.dataframe(
