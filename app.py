@@ -29,21 +29,22 @@ df['status'] = df.get('status').fillna("Unknown")
 df = df.dropna(subset=['delay'])
 
 # -------------------------
-# HEADER (CENTERED CLEAN UI)
+# HEADER (FINAL FIX)
 # -------------------------
-col1, col2, col3 = st.columns([2, 3, 2])
+col1, col2 = st.columns([1, 6])
 
-with col2:
+with col1:
     try:
-        st.image("logo.png", width=180)
+        st.image("logo.png", width=140)  # adjust 120–150 if needed
     except:
         pass
 
+with col2:
     st.markdown(
         """
-        <h2 style='text-align: center; margin-top: 10px; font-weight: 600;'>
+        <h3 style='margin-bottom: 0; font-weight: 600;'>
             TintBox Analytics
-        </h2>
+        </h3>
         """,
         unsafe_allow_html=True
     )
@@ -74,11 +75,7 @@ if df.empty:
 # -------------------------
 # TABS
 # -------------------------
-tab1, tab2, tab3 = st.tabs([
-    "Dashboard",
-    "Data Explorer",
-    "Prediction"
-])
+tab1, tab2, tab3 = st.tabs(["Dashboard", "Data Explorer", "Prediction"])
 
 # =========================
 # DASHBOARD
