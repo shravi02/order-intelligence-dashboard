@@ -31,58 +31,29 @@ df = df.dropna(subset=["delay"])
 st.markdown("""
 <style>
 
-/* =====================================================
-MAIN APP
-===================================================== */
-
+/* Main App */
 .stApp {
     background-color: #f8fafc;
 }
 
+/* Page Padding */
 .block-container {
-    padding-top: 1rem;
+    padding-top: 1.5rem;
     padding-left: 2rem;
     padding-right: 2rem;
     max-width: 100%;
 }
 
-/* =====================================================
-HEADER
-===================================================== */
-
-.header-container {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 10px;
-    margin-bottom: 25px;
-    flex-wrap: nowrap;
-}
-
-/* Logo */
-.logo-img {
-    height: 110px;
-    width: auto;
-    object-fit: contain;
-}
-
-/* Title */
-.title-text {
-    font-size: 34px;
+/* Main Title */
+.main-title {
+    text-align: center;
+    font-size: 42px;
     font-weight: 700;
     color: #1e293b;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    line-height: 1.1;
+    margin-bottom: 30px;
 }
 
-/* =====================================================
-METRIC CARDS
-===================================================== */
-
+/* Metric Cards */
 [data-testid="metric-container"] {
     background: white;
     border-radius: 14px;
@@ -90,42 +61,24 @@ METRIC CARDS
     border: 1px solid #e5e7eb;
 }
 
-/* =====================================================
-CHARTS
-===================================================== */
-
+/* Charts */
 .stPlotlyChart {
     background: white;
     border-radius: 14px;
     padding: 10px;
 }
 
-/* =====================================================
-TABLE
-===================================================== */
-
+/* Tables */
 [data-testid="stDataFrame"] {
     border-radius: 12px;
     overflow: hidden;
 }
 
-/* =====================================================
-MOBILE RESPONSIVE
-===================================================== */
-
+/* Mobile Responsive */
 @media (max-width: 768px) {
 
-    .header-container {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .logo-img {
-        height: 85px;
-    }
-
-    .title-text {
-        font-size: 28px;
+    .main-title {
+        font-size: 30px;
     }
 
     .block-container {
@@ -140,20 +93,10 @@ MOBILE RESPONSIVE
 # =====================================================
 # HEADER
 # =====================================================
-
 st.markdown(
     """
-    <div class="header-container">
-
-        <img
-            class="logo-img"
-            src="https://tintbox.in/cdn/shop/files/TintBox_Logo.png?v=1679057052"
-        />
-
-        <div class="title-text">
-            TintBox Analytics
-        </div>
-
+    <div class="main-title">
+        TintBox Analytics
     </div>
     """,
     unsafe_allow_html=True
