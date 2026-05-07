@@ -1,11 +1,13 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 
 # -------------------------
-# PAGE CONFIG
+# PAGE CONFIG (MOBILE FRIENDLY)
 # -------------------------
-st.set_page_config(page_title="TintBox Analytics", layout="wide")
+st.set_page_config(page_title="TintBox Analytics")
 
 # -------------------------
 # LOAD DATA
@@ -27,49 +29,31 @@ df['status'] = df.get('status').fillna("Unknown")
 df = df.dropna(subset=['delay'])
 
 # -------------------------
-# MINIMAL PROFESSIONAL CSS
+# HEADER WITH LOGO
 # -------------------------
-st.markdown("""
-<style>
-section[data-testid="stSidebar"] {
-    background-color: #f5f5f5;
-}
-h1 {
-    font-weight: 600;
-}
-h2, h3 {
-    font-weight: 500;
-}
-</style>
-""", unsafe_allow_html=True)
+col1, col2 = st.columns([1, 4])
 
-# -------------------------
-# HEADER
-# -------------------------
-st.title("TintBox Order Intelligence Dashboard")
-st.markdown("### Order Analytics and RTO Monitoring")
+with col1:
+    try:
+        st.image("logo.png", width=70)
+    except:
+        pass
+
+with col2:
+    st.title("TintBox Analytics")
+    st.caption("Order Intelligence Dashboard")
 
 st.markdown("---")
 
 # -------------------------
-# SIDEBAR FILTERS
+# FILTERS (MOBILE FRIENDLY)
 # -------------------------
-st.sidebar.header("Filters")
+payment_options = sorted(df['payment_type'].unique())
+risk_options = sorted(df['risk'].unique())
 
-payment_options = sorted(df['payment_type'].dropna().unique())
-risk_options = sorted(df['risk'].dropna().unique())
-
-payment = st.sidebar.multiselect(
-    "Payment Type",
-    options=payment_options,
-    default=payment_options
-)
-
-risk = st.sidebar.multiselect(
-    "Risk Level",
-    options=risk_options,
-    default=risk_options
-)
+with st.expander("Filters", expanded=False):
+    payment = st.multiselect("Payment Type", payment_options, default=payment_options)
+    risk = st.multiselect("Risk Level", risk_options, default=risk_options)
 
 if payment:
     df = df[df['payment_type'].isin(payment)]
@@ -82,112 +66,107 @@ if df.empty:
     st.stop()
 
 # -------------------------
-# KPI SECTION
+# TABS
 # -------------------------
-total_orders = len(df)
-returned = len(df[df['status'] == 'Returned'])
-rto = (returned / total_orders) * 100 if total_orders > 0 else 0
-avg_delay = df['delay'].mean()
+tab1, tab2, tab3 = st.tabs([
+    "Dashboard",
+    "Data Explorer",
+    "Prediction"
+])
 
-col1, col2, col3, col4 = st.columns(4)
+# =========================
+# TAB 1: DASHBOARD
+# =========================
+with tab1:
 
-col1.metric("Total Orders", total_orders)
-col2.metric("Returned Orders", returned)
-col3.metric("RTO Percentage", f"{rto:.2f}%")
-col4.metric("Average Delay (days)", f"{avg_delay:.2f}")
+    # KPIs (2x2 grid for mobile)
+    total_orders = len(df)
+    returned = len(df[df['status'] == 'Returned'])
+    rto = (returned / total_orders) * 100 if total_orders > 0 else 0
+    avg_delay = df['delay'].mean()
 
-st.markdown("---")
+    col1, col2 = st.columns(2)
+    col3, col4 = st.columns(2)
 
-# -------------------------
-# INSIGHTS
-# -------------------------
-st.subheader("Key Insights")
+    col1.metric("Total Orders", total_orders)
+    col2.metric("Returned Orders", returned)
+    col3.metric("RTO %", f"{rto:.2f}%")
+    col4.metric("Avg Delay", f"{avg_delay:.2f}")
 
-if rto > 50:
-    st.error("High return rate detected. Immediate action recommended.")
-elif rto > 30:
-    st.warning("Moderate return rate. Monitor closely.")
-else:
-    st.success("Return rate is under control.")
+    st.markdown("---")
 
-st.info("Observation: Orders with high delay and cash payment show higher return probability.")
+    # Insights
+    st.subheader("Key Insights")
 
-st.markdown("---")
+    if rto > 50:
+        st.error("High return rate detected")
+    elif rto > 30:
+        st.warning("Moderate return rate")
+    else:
+        st.success("Return rate under control")
 
-# -------------------------
-# CHARTS
-# -------------------------
-colA, colB = st.columns(2)
+    st.markdown("---")
 
-with colA:
-    fig1 = px.bar(
-        df,
-        x="risk",
-        color="risk",
-        title="Risk Distribution",
-        color_discrete_sequence=px.colors.qualitative.Set2
-    )
+    # Charts (STACKED for mobile)
+    fig1 = px.bar(df, x="risk", color="risk", title="Risk Distribution")
     fig1.update_layout(template="plotly")
     st.plotly_chart(fig1, use_container_width=True)
 
-with colB:
-    fig2 = px.histogram(
-        df,
-        x="delay",
-        title="Delay Distribution",
-        color_discrete_sequence=px.colors.qualitative.Set2
-    )
+    fig2 = px.histogram(df, x="delay", title="Delay Distribution")
     fig2.update_layout(template="plotly")
     st.plotly_chart(fig2, use_container_width=True)
 
-st.markdown("---")
+    st.markdown("---")
 
-# -------------------------
-# PAYMENT ANALYSIS
-# -------------------------
-st.subheader("Payment Type vs Returns")
+    fig3 = px.histogram(
+        df,
+        x="payment_type",
+        color="status",
+        barmode="group",
+        title="Payment vs Returns"
+    )
+    fig3.update_layout(template="plotly")
+    st.plotly_chart(fig3, use_container_width=True)
 
-fig3 = px.histogram(
-    df,
-    x="payment_type",
-    color="status",
-    barmode="group",
-    color_discrete_sequence=px.colors.qualitative.Set2
-)
-fig3.update_layout(template="plotly")
+    st.markdown("---")
 
-st.plotly_chart(fig3, use_container_width=True)
+    st.subheader("High Risk Orders")
+    st.dataframe(df[df['risk'] == 'High'].head(20), use_container_width=True)
 
-st.markdown("---")
+# =========================
+# TAB 2: DATA EXPLORER
+# =========================
+with tab2:
+    st.subheader("Dataset")
 
-# -------------------------
-# HIGH RISK ORDERS
-# -------------------------
-st.subheader("High Risk Orders")
+    st.dataframe(df, use_container_width=True)
 
-st.dataframe(df[df['risk'] == 'High'].head(20))
+# =========================
+# TAB 3: ML PREDICTION
+# =========================
+with tab3:
 
-st.markdown("---")
+    st.subheader("Return Prediction Model")
 
-# -------------------------
-# ACTION DISTRIBUTION
-# -------------------------
-st.subheader("Recommended Actions Distribution")
+    # Prepare model
+    df['target'] = df['status'].apply(lambda x: 1 if x == "Returned" else 0)
 
-fig4 = px.pie(
-    df,
-    names="action",
-    title="Decision Engine Output",
-    color_discrete_sequence=px.colors.qualitative.Set2
-)
-fig4.update_layout(template="plotly")
+    X = df[['delay', 'attempts']]
+    y = df['target']
 
-st.plotly_chart(fig4, use_container_width=True)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-st.markdown("---")
+    model = RandomForestClassifier()
+    model.fit(X_train, y_train)
 
-# -------------------------
-# RAW DATA
-# -------------------------
-with st.expander("View Full Dataset"):
-    st.dataframe(df)
+    # Input sliders
+    delay_input = st.slider("Delay (days)", 0, 15, 5)
+    attempts_input = st.slider("Delivery Attempts", 1, 5, 2)
+
+    if st.button("Predict Return Risk"):
+        prediction = model.predict([[delay_input, attempts_input]])[0]
+
+        if prediction == 1:
+            st.error("High probability of return")
+        else:
+            st.success("Likely to be delivered")
