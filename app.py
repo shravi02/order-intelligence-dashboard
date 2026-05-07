@@ -4,7 +4,6 @@ import plotly.express as px
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-import base64
 
 # =====================================================
 # PAGE CONFIG
@@ -50,19 +49,6 @@ for col in text_cols:
         df[col] = df[col].fillna('Unknown')
 
 # =====================================================
-# LOAD LOGO
-# =====================================================
-def get_base64(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-try:
-    logo_base64 = get_base64("logo.png")
-except:
-    logo_base64 = ""
-
-# =====================================================
 # CUSTOM CSS
 # =====================================================
 st.markdown("""
@@ -78,6 +64,15 @@ st.markdown("""
     padding-top: 1.5rem;
     padding-left: 2rem;
     padding-right: 2rem;
+}
+
+/* Title */
+.main-title {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 25px;
 }
 
 /* Metric Cards */
@@ -98,6 +93,10 @@ st.markdown("""
 /* Mobile Responsive */
 @media (max-width: 768px) {
 
+    .main-title {
+        font-size: 28px;
+    }
+
     .block-container {
         padding-left: 1rem;
         padding-right: 1rem;
@@ -111,29 +110,16 @@ st.markdown("""
 # HEADER
 # =====================================================
 st.markdown(
-    f"""
-    <div style='text-align:center; margin-bottom:20px;'>
-
-        <img 
-            src='data:image/png;base64,{logo_base64}'
-            width='120'
-        >
-
-        <h1 style='
-            margin-top:10px;
-            font-size:38px;
-            font-weight:700;
-            color:#1e293b;
-        '>
-            Logistics Intelligence System
-        </h1>
-
+    """
+    <div class="main-title">
+        Logistics Intelligence System
     </div>
     """,
     unsafe_allow_html=True
 )
 
 st.markdown("---")
+
 # =====================================================
 # SIDEBAR NAVIGATION
 # =====================================================
