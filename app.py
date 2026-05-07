@@ -122,16 +122,21 @@ st.markdown("""
 # =====================================================
 st.markdown(
     f"""
-    <div style='text-align:center; margin-bottom:20px;'>
+    <div style="text-align:center; margin-bottom:30px;">
 
-        <img 
-            src='data:image/png;base64,{logo_base64}'
-            width='150'
+        <img
+            src="data:image/png;base64,{logo_base64}"
+            width="220"
         >
 
-        <div class='main-title'>
+        <h1 style="
+            margin-top:10px;
+            font-size:38px;
+            font-weight:700;
+            color:#1e293b;
+        ">
             Logistics Intelligence System
-        </div>
+        </h1>
 
     </div>
     """,
@@ -139,7 +144,6 @@ st.markdown(
 )
 
 st.markdown("---")
-
 # =====================================================
 # SIDEBAR NAVIGATION
 # =====================================================
