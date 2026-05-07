@@ -117,7 +117,7 @@ st.markdown(f"""
 <div class="header-container">
     <img src="data:image/png;base64,{logo_base64}" class="logo-img">
     <div class="title-text">
-        TintBox Analytics
+        Logistics Intelligence System
     </div>
 </div>
 """, unsafe_allow_html=True)
