@@ -1,8 +1,3 @@
-# Full Upgraded Streamlit App Structure
-
-Replace your current `app.py` with this structure step by step.
-
-```python
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -38,18 +33,15 @@ else:
 # =====================================================
 df.columns = df.columns.str.strip()
 
-# Numeric conversion
 numeric_cols = ['delay', 'attempts']
 
 for col in numeric_cols:
     if col in df.columns:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
-# Remove null delay rows
 if 'delay' in df.columns:
     df = df.dropna(subset=['delay'])
 
-# Fill missing text values
 text_cols = ['risk', 'payment_type', 'status']
 
 for col in text_cols:
@@ -57,13 +49,71 @@ for col in text_cols:
         df[col] = df[col].fillna('Unknown')
 
 # =====================================================
+# CUSTOM CSS
+# =====================================================
+st.markdown("""
+<style>
+
+/* Main App */
+.stApp {
+    background-color: #f8fafc;
+}
+
+/* Page Padding */
+.block-container {
+    padding-top: 1.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+/* Title */
+.main-title {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 25px;
+}
+
+/* Metric Cards */
+[data-testid="metric-container"] {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+}
+
+/* Charts */
+.stPlotlyChart {
+    background: white;
+    border-radius: 14px;
+    padding: 10px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+
+    .main-title {
+        font-size: 28px;
+    }
+
+    .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# =====================================================
 # HEADER
 # =====================================================
 st.markdown(
     """
-    <h1 style='text-align:center;'>
+    <div class="main-title">
         Logistics Intelligence System
-    </h1>
+    </div>
     """,
     unsafe_allow_html=True
 )
@@ -108,6 +158,10 @@ filtered_df = df[
     (df['risk'].isin(risk))
 ]
 
+if filtered_df.empty:
+    st.warning("No data available for selected filters")
+    st.stop()
+
 # =====================================================
 # DASHBOARD
 # =====================================================
@@ -117,7 +171,12 @@ if section == "Dashboard":
 
     total_orders = len(filtered_df)
     returned = len(filtered_df[filtered_df['status'] == 'Returned'])
-    rto = (returned / total_orders) * 100 if total_orders > 0 else 0
+
+    rto = (
+        (returned / total_orders) * 100
+        if total_orders > 0 else 0
+    )
+
     avg_delay = filtered_df['delay'].mean()
 
     col1, col2, col3, col4 = st.columns(4)
@@ -132,6 +191,7 @@ if section == "Dashboard":
     c1, c2 = st.columns(2)
 
     with c1:
+
         fig1 = px.histogram(
             filtered_df,
             x='risk',
@@ -142,6 +202,7 @@ if section == "Dashboard":
         st.plotly_chart(fig1, use_container_width=True)
 
     with c2:
+
         fig2 = px.histogram(
             filtered_df,
             x='delay',
@@ -157,7 +218,6 @@ elif section == "Advanced Analytics":
 
     st.header("Advanced Analytics")
 
-    # Scatter Plot
     fig3 = px.scatter(
         filtered_df,
         x='delay',
@@ -168,7 +228,6 @@ elif section == "Advanced Analytics":
 
     st.plotly_chart(fig3, use_container_width=True)
 
-    # Payment Analysis
     fig4 = px.histogram(
         filtered_df,
         x='payment_type',
@@ -179,7 +238,6 @@ elif section == "Advanced Analytics":
 
     st.plotly_chart(fig4, use_container_width=True)
 
-    # Box Plot
     fig5 = px.box(
         filtered_df,
         x='risk',
@@ -305,27 +363,3 @@ elif section == "Upload Dataset":
     else:
 
         st.info("Currently using default dataset")
-```
-
-# IMPORTANT
-
-Update your `requirements.txt`:
-
-```txt
-streamlit
-pandas
-plotly
-scikit-learn
-```
-
-# AFTER SAVING
-
-Run:
-
-```bash
-git add .
-git commit -m "Upgraded Logistics Intelligence System"
-git push
-```
-
-Then reboot the Streamlit app.
