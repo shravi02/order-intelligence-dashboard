@@ -29,22 +29,24 @@ df['status'] = df.get('status').fillna("Unknown")
 df = df.dropna(subset=['delay'])
 
 # -------------------------
-# HEADER (FINAL FIX)
+# 🎯 HEADER (FINAL PERFECT VERSION)
 # -------------------------
-col1, col2 = st.columns([1, 6])
+col1, col2 = st.columns([1, 5])
 
 with col1:
     try:
-        st.image("logo.png", width=140)  # adjust 120–150 if needed
+        st.image("logo.png", width=200)   # 🔥 BIG LOGO
     except:
         pass
 
 with col2:
     st.markdown(
         """
-        <h3 style='margin-bottom: 0; font-weight: 600;'>
-            TintBox Analytics
-        </h3>
+        <div style="display:flex; align-items:center; height:100%;">
+            <h4 style="margin:0; font-weight:600;">
+                TintBox Analytics
+            </h4>
+        </div>
         """,
         unsafe_allow_html=True
     )
