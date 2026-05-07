@@ -5,22 +5,22 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 import base64
 
-# -------------------------
+# =====================================================
 # PAGE CONFIG
-# -------------------------
+# =====================================================
 st.set_page_config(
     page_title="TintBox Analytics",
     layout="wide"
 )
 
-# -------------------------
+# =====================================================
 # LOAD DATA
-# -------------------------
+# =====================================================
 df = pd.read_csv("data.csv")
 
-# -------------------------
+# =====================================================
 # DATA CLEANING
-# -------------------------
+# =====================================================
 df.columns = df.columns.str.strip()
 
 df['delay'] = pd.to_numeric(df.get('delay'), errors='coerce')
@@ -32,9 +32,9 @@ df['status'] = df.get('status').fillna("Unknown")
 
 df = df.dropna(subset=['delay'])
 
-# -------------------------
-# LOAD LOGO (HIGH QUALITY)
-# -------------------------
+# =====================================================
+# LOAD LOGO
+# =====================================================
 def get_base64(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
@@ -45,9 +45,9 @@ try:
 except:
     logo_base64 = ""
 
-# -------------------------
+# =====================================================
 # CUSTOM CSS
-# -------------------------
+# =====================================================
 st.markdown("""
 <style>
 
@@ -59,27 +59,28 @@ st.markdown("""
 /* Header styling */
 .header-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 18px;
-    margin-bottom: 10px;
+    gap: 6px;
+    margin-bottom: 18px;
     width: 100%;
 }
+
 /* Logo */
 .logo-img {
-    height: 90px;
+    height: 95px;
     width: auto;
     object-fit: contain;
 }
 
 /* Title */
 .title-text {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 600;
     margin: 0;
-    display: flex;
-    align-items: center;
-    height: 90px;
+    text-align: center;
+    color: #1f2937;
 }
 
 /* KPI Cards */
@@ -94,9 +95,7 @@ st.markdown("""
 @media (max-width: 768px) {
 
     .header-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+        gap: 4px;
     }
 
     .logo-img {
@@ -104,30 +103,33 @@ st.markdown("""
     }
 
     .title-text {
-        font-size: 20px;
-        height: auto;
+        font-size: 22px;
     }
 }
+
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------
+# =====================================================
 # HEADER
-# -------------------------
+# =====================================================
 st.markdown(f"""
 <div class="header-container">
+
     <img src="data:image/png;base64,{logo_base64}" class="logo-img">
+
     <div class="title-text">
         TintBox Analytics
     </div>
+
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("---")
 
-# -------------------------
+# =====================================================
 # FILTERS
-# -------------------------
+# =====================================================
 payment_options = sorted(df['payment_type'].unique())
 risk_options = sorted(df['risk'].unique())
 
@@ -156,18 +158,18 @@ if df.empty:
     st.warning("No data available for selected filters")
     st.stop()
 
-# -------------------------
+# =====================================================
 # TABS
-# -------------------------
+# =====================================================
 tab1, tab2, tab3 = st.tabs([
     "Dashboard",
     "Data Explorer",
     "Prediction"
 ])
 
-# ====================================================
+# =====================================================
 # DASHBOARD TAB
-# ====================================================
+# =====================================================
 with tab1:
 
     total_orders = len(df)
@@ -208,7 +210,8 @@ with tab1:
             title="Risk Distribution"
         )
 
-        fig1.update_layout(template="plotly")
+        fig1.update_layout(template="plotly_white")
+
         st.plotly_chart(fig1, use_container_width=True)
 
     with colB:
@@ -218,7 +221,8 @@ with tab1:
             title="Delay Distribution"
         )
 
-        fig2.update_layout(template="plotly")
+        fig2.update_layout(template="plotly_white")
+
         st.plotly_chart(fig2, use_container_width=True)
 
     st.markdown("---")
@@ -232,7 +236,7 @@ with tab1:
         title="Payment vs Returns"
     )
 
-    fig3.update_layout(template="plotly")
+    fig3.update_layout(template="plotly_white")
 
     st.plotly_chart(fig3, use_container_width=True)
 
@@ -246,9 +250,9 @@ with tab1:
         use_container_width=True
     )
 
-# ====================================================
+# =====================================================
 # DATA EXPLORER TAB
-# ====================================================
+# =====================================================
 with tab2:
 
     st.subheader("Dataset")
@@ -258,9 +262,9 @@ with tab2:
         use_container_width=True
     )
 
-# ====================================================
+# =====================================================
 # ML PREDICTION TAB
-# ====================================================
+# =====================================================
 with tab3:
 
     st.subheader("Return Prediction Model")
