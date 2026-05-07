@@ -1,341 +1,249 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-import base64
 
-# =====================================================
-# PAGE CONFIG
-# =====================================================
+# ---------------- PAGE CONFIG ----------------
 st.set_page_config(
     page_title="TintBox Analytics",
     layout="wide"
 )
 
-# =====================================================
-# LOAD DATA
-# =====================================================
+# ---------------- LOAD DATA ----------------
 df = pd.read_csv("data.csv")
 
-# =====================================================
-# DATA CLEANING
-# =====================================================
-df.columns = df.columns.str.strip()
+df = df.dropna()
 
-df['delay'] = pd.to_numeric(df.get('delay'), errors='coerce')
-df['attempts'] = pd.to_numeric(df.get('attempts'), errors='coerce')
+df["delay"] = pd.to_numeric(df["delay"], errors="coerce")
+df["attempts"] = pd.to_numeric(df["attempts"], errors="coerce")
 
-df['risk'] = df.get('risk').fillna("Unknown")
-df['payment_type'] = df.get('payment_type').fillna("Unknown")
-df['status'] = df.get('status').fillna("Unknown")
+df = df.dropna(subset=["delay"])
 
-df = df.dropna(subset=['delay'])
-
-# =====================================================
-# LOGO LOADER
-# =====================================================
-def get_base64(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-try:
-    logo_base64 = get_base64("logo.png")
-except:
-    logo_base64 = ""
-
-# =====================================================
-# CUSTOM CSS
-# =====================================================
+# ---------------- CUSTOM CSS ----------------
 st.markdown("""
 <style>
 
-/* Main spacing */
+/* Main app */
+.stApp {
+    background-color: #f8fafc;
+}
+
+/* Remove extra top spacing */
 .block-container {
-    padding-top: 1.2rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
-/* =====================================================
-HEADER
-===================================================== */
-
-.header-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 25px;
-}
-
+/* Header */
 .header-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 22px;
+    gap: 25px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
-/* LOGO */
+/* Logo */
 .logo-img {
-    height: 95px;
+    height: 90px;
     width: auto;
-    object-fit: contain;
 }
 
-/* TITLE */
+/* Title */
 .title-text {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 42px;
+    font-weight: 700;
+    color: #1e293b;
     margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    height: 95px;
-    line-height: 1;
-}
-
-/* KPI Cards */
-[data-testid="metric-container"] {
-    border: 1px solid #ececec;
-    padding: 18px;
-    border-radius: 14px;
-    background-color: #ffffff;
-}
-
-/* Better chart spacing */
-.stPlotlyChart {
-    padding-top: 10px;
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
 
-    .block-container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-
     .header-container {
         flex-direction: column;
+        text-align: center;
         gap: 10px;
     }
 
     .logo-img {
-        height: 80px;
+        height: 70px;
     }
 
     .title-text {
-        height: auto;
-        font-size: 20px;
-        text-align: center;
+        font-size: 30px;
     }
+}
+
+/* Metric cards */
+[data-testid="metric-container"] {
+    background: white;
+    border-radius: 14px;
+    padding: 15px;
+    border: 1px solid #e5e7eb;
+}
+
+/* Charts */
+.plot-container {
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# =====================================================
-# HEADER
-# =====================================================
-st.markdown(f"""
-<div class="header-wrapper">
-    <div class="header-container">
+# ---------------- HEADER ----------------
+st.markdown("""
+<div class="header-container">
 
-        <img 
-            src="data:image/png;base64,{logo_base64}" 
-            class="logo-img"
-        >
+    <img class="logo-img"
+    src="https://tintbox.in/cdn/shop/files/TintBox_Logo.png">
 
-        <div class="title-text">
-            TintBox Analytics
-        </div>
+    <h1 class="title-text">
+        TintBox Analytics
+    </h1>
 
-    </div>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("---")
+st.divider()
 
-# =====================================================
-# FILTERS
-# =====================================================
-payment_options = sorted(df['payment_type'].unique())
-risk_options = sorted(df['risk'].unique())
-
+# ---------------- FILTERS ----------------
 with st.expander("Filters", expanded=False):
 
-    payment = st.multiselect(
-        "Payment Type",
-        payment_options,
-        default=payment_options
-    )
+    col1, col2 = st.columns(2)
 
-    risk = st.multiselect(
-        "Risk Level",
-        risk_options,
-        default=risk_options
-    )
+    with col1:
+        payment = st.multiselect(
+            "Payment Type",
+            options=df["payment_type"].unique(),
+            default=df["payment_type"].unique()
+        )
+
+    with col2:
+        risk = st.multiselect(
+            "Risk Level",
+            options=df["risk"].unique(),
+            default=df["risk"].unique()
+        )
 
 # Apply filters
-if payment:
-    df = df[df['payment_type'].isin(payment)]
+df = df[
+    (df["payment_type"].isin(payment)) &
+    (df["risk"].isin(risk))
+]
 
-if risk:
-    df = df[df['risk'].isin(risk)]
+# ---------------- KPIs ----------------
+total_orders = len(df)
+returned = len(df[df["status"] == "Returned"])
+rto = (returned / total_orders) * 100
+avg_delay = df["delay"].mean()
 
-if df.empty:
-    st.warning("No data available for selected filters")
-    st.stop()
+k1, k2, k3, k4 = st.columns(4)
 
-# =====================================================
-# TABS
-# =====================================================
-tab1, tab2, tab3 = st.tabs([
-    "Dashboard",
-    "Data Explorer",
-    "Prediction"
-])
+k1.metric("Total Orders", total_orders)
+k2.metric("Returned Orders", returned)
+k3.metric("RTO %", f"{rto:.2f}%")
+k4.metric("Average Delay", f"{avg_delay:.2f} days")
 
-# =====================================================
-# DASHBOARD
-# =====================================================
-with tab1:
+st.divider()
 
-    total_orders = len(df)
-    returned = len(df[df['status'] == 'Returned'])
-    rto = (returned / total_orders) * 100 if total_orders > 0 else 0
-    avg_delay = df['delay'].mean()
+# ---------------- INSIGHTS ----------------
+st.subheader("Key Insights")
 
-    # KPI ROW
-    col1, col2, col3, col4 = st.columns(4)
+if rto > 50:
+    st.error("High return rate detected")
+elif rto > 30:
+    st.warning("Moderate return rate detected")
+else:
+    st.success("Return rate is stable")
 
-    col1.metric("Total Orders", total_orders)
-    col2.metric("Returned Orders", returned)
-    col3.metric("RTO %", f"{rto:.2f}%")
-    col4.metric("Average Delay", f"{avg_delay:.2f} days")
+st.divider()
 
-    st.markdown("---")
+# ---------------- CHARTS ----------------
+c1, c2 = st.columns(2)
 
-    # INSIGHTS
-    st.subheader("Key Insights")
+with c1:
 
-    if rto > 50:
-        st.error("High return rate detected")
-    elif rto > 30:
-        st.warning("Moderate return rate")
-    else:
-        st.success("Return rate under control")
-
-    st.markdown("---")
-
-    # CHARTS
-    colA, colB = st.columns(2)
-
-    with colA:
-        fig1 = px.bar(
-            df,
-            x="risk",
-            color="risk",
-            title="Risk Distribution"
-        )
-
-        fig1.update_layout(template="plotly")
-        st.plotly_chart(fig1, use_container_width=True)
-
-    with colB:
-        fig2 = px.histogram(
-            df,
-            x="delay",
-            title="Delay Distribution"
-        )
-
-        fig2.update_layout(template="plotly")
-        st.plotly_chart(fig2, use_container_width=True)
-
-    st.markdown("---")
-
-    # PAYMENT ANALYSIS
-    fig3 = px.histogram(
+    fig1 = px.histogram(
         df,
-        x="payment_type",
-        color="status",
-        barmode="group",
-        title="Payment vs Returns"
+        x="risk",
+        color="risk",
+        title="Risk Distribution",
+        color_discrete_map={
+            "High": "#ef4444",
+            "Medium": "#f59e0b",
+            "Low": "#22c55e"
+        }
     )
 
-    fig3.update_layout(template="plotly")
-
-    st.plotly_chart(fig3, use_container_width=True)
-
-    st.markdown("---")
-
-    # HIGH RISK TABLE
-    st.subheader("High Risk Orders")
-
-    st.dataframe(
-        df[df['risk'] == 'High'].head(20),
-        use_container_width=True
+    fig1.update_layout(
+        paper_bgcolor="white",
+        plot_bgcolor="white"
     )
 
-# =====================================================
-# DATA EXPLORER
-# =====================================================
-with tab2:
+    st.plotly_chart(fig1, use_container_width=True)
 
-    st.subheader("Dataset")
+with c2:
 
-    st.dataframe(
+    fig2 = px.histogram(
         df,
-        use_container_width=True
+        x="delay",
+        title="Delay Distribution",
+        color_discrete_sequence=["#2563eb"]
     )
 
-# =====================================================
-# ML PREDICTION
-# =====================================================
-with tab3:
-
-    st.subheader("Return Prediction Model")
-
-    # Target
-    df['target'] = df['status'].apply(
-        lambda x: 1 if x == "Returned" else 0
+    fig2.update_layout(
+        paper_bgcolor="white",
+        plot_bgcolor="white"
     )
 
-    X = df[['delay', 'attempts']]
-    y = df['target']
+    st.plotly_chart(fig2, use_container_width=True)
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=0.2,
-        random_state=42
-    )
+st.divider()
 
-    model = RandomForestClassifier()
-    model.fit(X_train, y_train)
+# ---------------- PAYMENT ANALYSIS ----------------
+st.subheader("Payment vs Returns")
 
-    delay_input = st.slider(
-        "Delay (days)",
-        0,
-        15,
-        5
-    )
+fig3 = px.histogram(
+    df,
+    x="payment_type",
+    color="status",
+    barmode="group",
+    color_discrete_map={
+        "Returned": "#ef4444",
+        "Delivered": "#22c55e"
+    }
+)
 
-    attempts_input = st.slider(
-        "Delivery Attempts",
-        1,
-        5,
-        2
-    )
+fig3.update_layout(
+    paper_bgcolor="white",
+    plot_bgcolor="white"
+)
 
-    if st.button("Predict Return Risk"):
+st.plotly_chart(fig3, use_container_width=True)
 
-        prediction = model.predict(
-            [[delay_input, attempts_input]]
-        )[0]
+st.divider()
 
-        if prediction == 1:
-            st.error("High probability of return")
-        else:
-            st.success("Likely to be delivered")
+# ---------------- PREDICTION ----------------
+st.subheader("Prediction")
+
+delay_input = st.slider("Delivery Delay", 1, 15, 5)
+
+if delay_input > 7:
+    st.error("Prediction: High Return Risk")
+elif delay_input > 4:
+    st.warning("Prediction: Medium Return Risk")
+else:
+    st.success("Prediction: Low Return Risk")
+
+st.divider()
+
+# ---------------- DATA TABLE ----------------
+st.subheader("High Risk Orders")
+
+st.dataframe(
+    df[df["risk"] == "High"].head(20),
+    use_container_width=True
+)
