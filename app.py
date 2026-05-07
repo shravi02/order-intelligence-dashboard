@@ -60,10 +60,11 @@ st.markdown("""
 .header-container {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 18px;
     margin-bottom: 10px;
+    width: 100%;
 }
-
 /* Logo */
 .logo-img {
     height: 90px;
