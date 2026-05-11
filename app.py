@@ -34,16 +34,16 @@ st.set_page_config(
 # =====================================================
 names = ["Admin User", "Viewer User"]
 usernames = ["admin", "viewer"]
-passwords = ["admin123", "viewer123"]
-hashed_passwords = stauth.Hasher.hash_passwords(passwords)
-
 credentials = {
     "usernames": {
-        usernames[i]: {
-            "name": names[i],
-            "password": hashed_passwords[i]
+        "admin": {
+            "name": "Admin User",
+            "password": "admin123"
+        },
+        "viewer": {
+            "name": "Viewer User",
+            "password": "viewer123"
         }
-        for i in range(len(usernames))
     }
 }
 
@@ -60,7 +60,9 @@ Admin Login
 Username: admin
 Password: admin123
 """)
-name, authentication_status, username = authenticator.login()
+name, authentication_status, username = authenticator.login(
+    location="main"
+)
 
 if authentication_status == False:
     st.error("Incorrect username or password")
