@@ -15,6 +15,12 @@ from sklearn.metrics import auc
 import matplotlib.pyplot as plt
 import seaborn as sns
 from prophet import Prophet
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.platypus import Paragraph
+from reportlab.platypus import Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+
+from io import BytesIO
 
 # =====================================================
 # PAGE CONFIG
@@ -937,26 +943,217 @@ elif section == "Download Reports":
 
     st.header("Download Reports")
 
-    csv = filtered_df.to_csv(index=False)
+    # ================================================
+    # CSV DOWNLOAD
+    # ================================================
+
+    csv = filtered_df.to_csv(
+        index=False
+    )
 
     st.download_button(
-        label="Download Full Analytics Report",
+        label="Download Full Analytics CSV",
         data=csv,
         file_name="analytics_report.csv",
         mime="text/csv"
     )
+
+    st.markdown("---")
+
+    # ================================================
+    # HIGH RISK ORDERS CSV
+    # ================================================
 
     high_risk_csv = filtered_df[
         filtered_df['risk'] == 'High'
     ].to_csv(index=False)
 
     st.download_button(
-        label="Download High Risk Orders",
+        label="Download High Risk Orders CSV",
         data=high_risk_csv,
         file_name="high_risk_orders.csv",
         mime="text/csv"
     )
 
+    st.markdown("---")
+
+    # ================================================
+    # EXECUTIVE PDF REPORT
+    # ================================================
+
+    st.subheader(
+        "Executive PDF Report"
+    )
+
+    total_orders = len(filtered_df)
+
+    returned_orders = len(
+        filtered_df[
+            filtered_df['status'] == 'Returned'
+        ]
+    )
+
+    revenue = filtered_df[
+        'order_value'
+    ].sum()
+
+    revenue_loss = filtered_df[
+        filtered_df['status'] == 'Returned'
+    ]['order_value'].sum()
+
+    rto = (
+        returned_orders / total_orders
+    ) * 100
+
+    high_risk_orders = len(
+        filtered_df[
+            filtered_df['risk'] == 'High'
+        ]
+    )
+
+    # ================================================
+    # CREATE PDF
+    # ================================================
+
+    buffer = BytesIO()
+
+    doc = SimpleDocTemplate(buffer)
+
+    styles = getSampleStyleSheet()
+
+    elements = []
+
+    # ================================================
+    # TITLE
+    # ================================================
+
+    elements.append(
+        Paragraph(
+            "Logistics Intelligence Executive Report",
+            styles['Title']
+        )
+    )
+
+    elements.append(
+        Spacer(1, 20)
+    )
+
+    # ================================================
+    # KPI SUMMARY
+    # ================================================
+
+    summary_text = f'''
+    <b>Total Orders:</b> {total_orders}<br/><br/>
+
+    <b>Total Revenue:</b> ₹{revenue:,.0f}<br/><br/>
+
+    <b>Returned Orders:</b> {returned_orders}<br/><br/>
+
+    <b>RTO Percentage:</b> {rto:.2f}%<br/><br/>
+
+    <b>Revenue Loss:</b> ₹{revenue_loss:,.0f}<br/><br/>
+
+    <b>High Risk Orders:</b> {high_risk_orders}<br/><br/>
+    '''
+
+    elements.append(
+        Paragraph(
+            summary_text,
+            styles['BodyText']
+        )
+    )
+
+    elements.append(
+        Spacer(1, 20)
+    )
+
+    # ================================================
+    # BUSINESS INSIGHTS
+    # ================================================
+
+    elements.append(
+        Paragraph(
+            "Business Insights",
+            styles['Heading2']
+        )
+    )
+
+    insights_text = '''
+    • COD orders show highest return probability<br/><br/>
+
+    • Orders delayed beyond 7 days have significantly higher RTO<br/><br/>
+
+    • UPI orders show strongest delivery success rate<br/><br/>
+
+    • High-risk orders require immediate operational action<br/><br/>
+    '''
+
+    elements.append(
+        Paragraph(
+            insights_text,
+            styles['BodyText']
+        )
+    )
+
+    elements.append(
+        Spacer(1, 20)
+    )
+
+    # ================================================
+    # TOP RISKY CITIES
+    # ================================================
+
+    top_cities = filtered_df.groupby(
+        'city'
+    ).apply(
+        lambda x: (
+            (
+                x['status'] == 'Returned'
+            ).mean()
+        ) * 100
+    ).reset_index(name='RTO')
+
+    top_cities = top_cities.sort_values(
+        by='RTO',
+        ascending=False
+    ).head(5)
+
+    city_text = "<b>Top Risky Cities:</b><br/><br/>"
+
+    for _, row in top_cities.iterrows():
+
+        city_text += (
+            f"{row['city']} "
+            f"- {row['RTO']:.2f}% RTO<br/>"
+        )
+
+    elements.append(
+        Paragraph(
+            city_text,
+            styles['BodyText']
+        )
+    )
+
+    # ================================================
+    # BUILD PDF
+    # ================================================
+
+    doc.build(elements)
+
+    pdf = buffer.getvalue()
+
+    buffer.close()
+
+    # ================================================
+    # DOWNLOAD BUTTON
+    # ================================================
+
+    st.download_button(
+        label="Generate Executive PDF Report",
+        data=pdf,
+        file_name="executive_report.pdf",
+        mime="application/pdf"
+    )
 # =====================================================
 # UPLOAD DATASET
 # =====================================================
