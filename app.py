@@ -14,6 +14,7 @@ from sklearn.metrics import auc
 
 import matplotlib.pyplot as plt
 import seaborn as sns
+from prophet import Prophet
 
 # =====================================================
 # PAGE CONFIG
@@ -139,11 +140,14 @@ st.markdown("---")
 section = st.sidebar.radio(
     "Navigation",
     [
-        "Dashboard",
-        "Business Health",
-        "ML Prediction",
-        "Download Reports",
-        "Upload Dataset"
+       
+    "Dashboard",
+    "Business Health",
+    "ML Prediction",
+    "Forecasting",
+    "Download Reports",
+    "Upload Dataset"
+
     ]
 )
 
@@ -807,6 +811,125 @@ elif section == "ML Prediction":
             st.info(
                 "Recommended Action: Normal Delivery"
             )
+
+# =====================================================
+# FORECASTING
+# =====================================================
+elif section == "Forecasting":
+
+    st.header("Return Order Forecasting")
+
+    # ================================================
+    # PREPARE FORECAST DATA
+    # ================================================
+
+    forecast_df = filtered_df.copy()
+
+    forecast_df['order_date'] = pd.to_datetime(
+        forecast_df['order_date'],
+        format='%d-%m-%Y'
+    )
+
+    returns_df = forecast_df[
+        forecast_df['status'] == 'Returned'
+    ]
+
+    daily_returns = returns_df.groupby(
+        'order_date'
+    ).size().reset_index(name='y')
+
+    daily_returns.columns = ['ds', 'y']
+
+    # ================================================
+    # TRAIN PROPHET MODEL
+    # ================================================
+
+    model = Prophet()
+
+    model.fit(daily_returns)
+
+    future = model.make_future_dataframe(
+        periods=30
+    )
+
+    forecast = model.predict(future)
+
+    # ================================================
+    # FORECAST VISUALIZATION
+    # ================================================
+
+    st.subheader(
+        "Next 30 Days Return Forecast"
+    )
+
+    fig1 = px.line(
+        forecast,
+        x='ds',
+        y='yhat',
+        title='Predicted Return Orders'
+    )
+
+    st.plotly_chart(
+        fig1,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    # ================================================
+    # CONFIDENCE INTERVAL
+    # ================================================
+
+    st.subheader(
+        "Forecast Confidence Interval"
+    )
+
+    fig2 = px.line(
+        forecast,
+        x='ds',
+        y='yhat_upper',
+        title='Upper Forecast Trend'
+    )
+
+    fig2.add_scatter(
+        x=forecast['ds'],
+        y=forecast['yhat_lower'],
+        mode='lines',
+        name='Lower Forecast'
+    )
+
+    st.plotly_chart(
+        fig2,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    # ================================================
+    # FORECAST INSIGHTS
+    # ================================================
+
+    avg_forecast = forecast[
+        'yhat'
+    ].tail(30).mean()
+
+    if avg_forecast > 20:
+
+        st.error(
+            "High future return trend predicted"
+        )
+
+    elif avg_forecast > 10:
+
+        st.warning(
+            "Moderate return growth predicted"
+        )
+
+    else:
+
+        st.success(
+            "Stable return trend predicted"
+        )
 # =====================================================
 # DOWNLOAD REPORTS
 # =====================================================
