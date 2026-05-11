@@ -35,7 +35,7 @@ st.set_page_config(
 names = ["Admin User", "Viewer User"]
 usernames = ["admin", "viewer"]
 passwords = ["admin123", "viewer123"]
-hashed_passwords = stauth.Hasher(passwords).generate()
+hashed_passwords = stauth.Hasher.hash_passwords(passwords)
 
 credentials = {
     "usernames": {
