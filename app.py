@@ -138,10 +138,7 @@ elif authentication_status:
 
     st.sidebar.markdown("---")
 
-    authenticator.logout(
-        "Logout",
-        "sidebar"
-    )
+   
 
     st.sidebar.markdown("---")
 
@@ -196,6 +193,10 @@ elif authentication_status:
         (df["payment_type"].isin(payment)) &
         (df["risk"].isin(risk))
     ]
+	authenticator.logout(
+	        "Logout",
+	        "sidebar"
+	    )
 
     if filtered_df.empty:
         st.warning("No data for selected filters.")
