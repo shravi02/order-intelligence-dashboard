@@ -2,3 +2,7 @@ streamlit
 pandas
 plotly
 scikit-learn
+joblib
+matplotlib
+seaborn
+xgboost
