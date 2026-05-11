@@ -344,6 +344,10 @@ elif section == "Business Health":
 
     c1, c2 = st.columns(2)
 
+    # ================================================
+    # PAYMENT PERFORMANCE
+    # ================================================
+
     with c1:
 
         fig3 = px.histogram(
@@ -354,10 +358,19 @@ elif section == "Business Health":
             title='Payment Method Performance'
         )
 
+        fig3.update_layout(
+            paper_bgcolor='white',
+            plot_bgcolor='white'
+        )
+
         st.plotly_chart(
             fig3,
             use_container_width=True
         )
+
+    # ================================================
+    # DELAY ANALYTICS
+    # ================================================
 
     with c2:
 
@@ -369,10 +382,21 @@ elif section == "Business Health":
             title='Delay Distribution by Risk'
         )
 
+        fig4.update_layout(
+            paper_bgcolor='white',
+            plot_bgcolor='white'
+        )
+
         st.plotly_chart(
             fig4,
             use_container_width=True
         )
+
+    st.markdown("---")
+
+    # ================================================
+    # ORDER TREND
+    # ================================================
 
     monthly_orders = filtered_df.groupby(
         'order_date'
@@ -385,8 +409,128 @@ elif section == "Business Health":
         title='Order Trend Over Time'
     )
 
+    fig5.update_layout(
+        paper_bgcolor='white',
+        plot_bgcolor='white'
+    )
+
     st.plotly_chart(
         fig5,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    # ================================================
+    # GEOGRAPHIC ANALYTICS
+    # ================================================
+
+    st.subheader("Geographic Analytics")
+
+    city_rto = filtered_df.groupby(
+        "city"
+    ).apply(
+        lambda x: (
+            (
+                x["status"] == "Returned"
+            ).mean()
+        ) * 100
+    ).reset_index(name="RTO_Percentage")
+
+    city_orders = filtered_df.groupby(
+        "city"
+    ).size().reset_index(name="Total_Orders")
+
+    city_revenue = filtered_df.groupby(
+        "city"
+    )['order_value'].sum().reset_index(name="Revenue")
+
+    city_summary = pd.merge(
+        city_rto,
+        city_orders,
+        on="city"
+    )
+
+    city_summary = pd.merge(
+        city_summary,
+        city_revenue,
+        on="city"
+    )
+
+    # ================================================
+    # CITY RISK BUBBLE CHART
+    # ================================================
+
+    fig6 = px.scatter(
+        city_summary,
+        x="city",
+        y="RTO_Percentage",
+        size="Total_Orders",
+        color="Revenue",
+        hover_name="city",
+        title="City-wise RTO Risk Analysis",
+        size_max=60
+    )
+
+    fig6.update_layout(
+        paper_bgcolor='white',
+        plot_bgcolor='white'
+    )
+
+    st.plotly_chart(
+        fig6,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    # ================================================
+    # TOP RISKY CITIES
+    # ================================================
+
+    st.subheader("Top Risky Cities")
+
+    risky_cities = city_summary.sort_values(
+        by="RTO_Percentage",
+        ascending=False
+    )
+
+    st.dataframe(
+        risky_cities,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    # ================================================
+    # PRODUCT RETURN ANALYTICS
+    # ================================================
+
+    st.subheader("Top Returning Products")
+
+    product_returns = filtered_df[
+        filtered_df['status'] == 'Returned'
+    ]
+
+    product_returns = product_returns.groupby(
+        'product'
+    ).size().reset_index(name='Returns')
+
+    fig7 = px.bar(
+        product_returns,
+        x='product',
+        y='Returns',
+        color='Returns',
+        title='Product-wise Return Volume'
+    )
+
+    fig7.update_layout(
+        paper_bgcolor='white',
+        plot_bgcolor='white'
+    )
+
+    st.plotly_chart(
+        fig7,
         use_container_width=True
     )
 
