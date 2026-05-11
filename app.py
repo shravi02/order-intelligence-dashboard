@@ -4,6 +4,16 @@ import plotly.express as px
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
+
+from xgboost import XGBClassifier
+
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import roc_curve
+from sklearn.metrics import auc
+
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # =====================================================
 # PAGE CONFIG
