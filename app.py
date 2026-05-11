@@ -551,13 +551,42 @@ elif section == "ML Prediction":
 
     st.header("AI Return Risk Prediction")
 
+    # ================================================
+    # PREPARE DATA
+    # ================================================
+
     model_df = filtered_df.copy()
 
     model_df['target'] = model_df['status'].apply(
         lambda x: 1 if x == 'Returned' else 0
     )
 
-    X = model_df[['delay', 'attempts']]
+    # Encode categorical columns
+    model_df = pd.get_dummies(
+        model_df,
+        columns=[
+            'payment_type',
+            'city',
+            'product_type'
+        ]
+    )
+
+    feature_columns = [
+        col for col in model_df.columns
+        if col not in [
+            'status',
+            'target',
+            'order_id',
+            'customer_name',
+            'product',
+            'action',
+            'risk',
+            'order_date'
+        ]
+    ]
+
+    X = model_df[feature_columns]
+
     y = model_df['target']
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -567,23 +596,158 @@ elif section == "ML Prediction":
         random_state=42
     )
 
-    model = RandomForestClassifier()
+    # ================================================
+    # MODELS
+    # ================================================
 
-    model.fit(X_train, y_train)
+    rf_model = RandomForestClassifier()
 
-    predictions = model.predict(X_test)
-
-    accuracy = accuracy_score(
-        y_test,
-        predictions
+    lr_model = LogisticRegression(
+        max_iter=1000
     )
 
-    st.metric(
-        "Model Accuracy",
-        f"{accuracy*100:.2f}%"
+    xgb_model = XGBClassifier(
+        eval_metric='logloss'
+    )
+
+    # Train models
+    rf_model.fit(X_train, y_train)
+
+    lr_model.fit(X_train, y_train)
+
+    xgb_model.fit(X_train, y_train)
+
+    # Predictions
+    rf_pred = rf_model.predict(X_test)
+
+    lr_pred = lr_model.predict(X_test)
+
+    xgb_pred = xgb_model.predict(X_test)
+
+    # Accuracy
+    rf_acc = accuracy_score(
+        y_test,
+        rf_pred
+    )
+
+    lr_acc = accuracy_score(
+        y_test,
+        lr_pred
+    )
+
+    xgb_acc = accuracy_score(
+        y_test,
+        xgb_pred
+    )
+
+    # ================================================
+    # MODEL COMPARISON
+    # ================================================
+
+    st.subheader("Model Comparison")
+
+    comparison_df = pd.DataFrame({
+        "Model": [
+            "Random Forest",
+            "Logistic Regression",
+            "XGBoost"
+        ],
+        "Accuracy": [
+            rf_acc,
+            lr_acc,
+            xgb_acc
+        ]
+    })
+
+    st.dataframe(
+        comparison_df,
+        use_container_width=True
     )
 
     st.markdown("---")
+
+    # ================================================
+    # CONFUSION MATRIX
+    # ================================================
+
+    st.subheader("Confusion Matrix")
+
+    cm = confusion_matrix(
+        y_test,
+        rf_pred
+    )
+
+    fig, ax = plt.subplots()
+
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt='d',
+        cmap='Blues',
+        ax=ax
+    )
+
+    ax.set_xlabel("Predicted")
+
+    ax.set_ylabel("Actual")
+
+    st.pyplot(fig)
+
+    st.markdown("---")
+
+    # ================================================
+    # ROC CURVE
+    # ================================================
+
+    st.subheader("ROC Curve")
+
+    rf_probs = rf_model.predict_proba(
+        X_test
+    )[:, 1]
+
+    fpr, tpr, _ = roc_curve(
+        y_test,
+        rf_probs
+    )
+
+    roc_auc = auc(
+        fpr,
+        tpr
+    )
+
+    fig2, ax2 = plt.subplots()
+
+    ax2.plot(
+        fpr,
+        tpr,
+        label=f"AUC = {roc_auc:.2f}"
+    )
+
+    ax2.plot(
+        [0, 1],
+        [0, 1],
+        linestyle='--'
+    )
+
+    ax2.set_xlabel(
+        "False Positive Rate"
+    )
+
+    ax2.set_ylabel(
+        "True Positive Rate"
+    )
+
+    ax2.legend()
+
+    st.pyplot(fig2)
+
+    st.markdown("---")
+
+    # ================================================
+    # AI RISK SIMULATOR
+    # ================================================
+
+    st.subheader("AI Risk Simulator")
 
     delay_input = st.slider(
         "Delivery Delay",
@@ -599,10 +763,29 @@ elif section == "ML Prediction":
         2
     )
 
-    if st.button("Predict Return Risk"):
+    order_value_input = st.slider(
+        "Order Value",
+        200,
+        5000,
+        1500
+    )
 
-        result = model.predict(
-            [[delay_input, attempts_input]]
+    if st.button(
+        "Predict Return Risk"
+    ):
+
+        input_data = X.iloc[0:1].copy()
+
+        input_data[:] = 0
+
+        input_data['delay'] = delay_input
+
+        input_data['attempts'] = attempts_input
+
+        input_data['order_value'] = order_value_input
+
+        result = rf_model.predict(
+            input_data
         )[0]
 
         if result == 1:
@@ -621,6 +804,9 @@ elif section == "ML Prediction":
                 "Low Return Risk Predicted"
             )
 
+            st.info(
+                "Recommended Action: Normal Delivery"
+            )
 # =====================================================
 # DOWNLOAD REPORTS
 # =====================================================
