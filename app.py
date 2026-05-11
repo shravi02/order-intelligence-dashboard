@@ -140,8 +140,6 @@ elif authentication_status:
 
    
 
-    st.sidebar.markdown("---")
-
     if username == "admin":
 
         section = st.sidebar.radio(
