@@ -9,3 +9,4 @@ xgboost
 prophet
 numpy
 reportlab
+streamlit-authenticator
