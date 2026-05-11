@@ -228,13 +228,29 @@ elif authentication_status:
 
         st.markdown("---")
 
-        # Smart Insights
+               # Smart Insights
         st.subheader("Smart Insights")
-       st.markdown('''<div class="insight-box">COD orders show highest return probability</div>''', unsafe_allow_html=True)
 
-st.markdown('''<div class="insight-box">Orders delayed beyond 7 days are most likely to return</div>''', unsafe_allow_html=True)
+        st.markdown(
+            '''<div class="insight-box">
+            COD orders show highest return probability
+            </div>''',
+            unsafe_allow_html=True
+        )
 
-st.markdown('''<div class="insight-box">UPI orders have lowest RTO percentage</div>''', unsafe_allow_html=True)
+        st.markdown(
+            '''<div class="insight-box">
+            Orders delayed beyond 7 days are most likely to return
+            </div>''',
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            '''<div class="insight-box">
+            UPI orders have lowest RTO percentage
+            </div>''',
+            unsafe_allow_html=True
+        )
 
         st.markdown("---")
 
