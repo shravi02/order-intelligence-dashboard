@@ -189,7 +189,7 @@ elif authentication_status:
         default=sorted(df["risk"].unique())
     )
 
-        filtered_df = df[
+    filtered_df = df[
         (df["payment_type"].isin(payment)) &
         (df["risk"].isin(risk))
     ]
