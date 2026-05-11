@@ -54,12 +54,14 @@ authenticator = stauth.Authenticate(
     cookie_expiry_days=1
 )
 
-st.info("""
-Admin Login
+if authentication_status != True:
 
-Username: admin
-Password: admin123
-""")
+    st.caption("""
+    Demo Login
+    
+    Username: admin  
+    Password: admin123
+    """)
 authenticator.login(location="main")
 
 name = st.session_state.get("name")
