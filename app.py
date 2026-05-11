@@ -189,14 +189,17 @@ elif authentication_status:
         default=sorted(df["risk"].unique())
     )
 
-    filtered_df = df[
+        filtered_df = df[
         (df["payment_type"].isin(payment)) &
         (df["risk"].isin(risk))
     ]
-	authenticator.logout(
-	        "Logout",
-	        "sidebar"
-	    )
+
+    st.sidebar.markdown("---")
+
+    authenticator.logout(
+        "Logout",
+        "sidebar"
+    )
 
     if filtered_df.empty:
         st.warning("No data for selected filters.")
@@ -229,7 +232,7 @@ elif authentication_status:
 
         st.markdown("---")
 
-               # Smart Insights
+            # Smart Insights
         st.subheader("Smart Insights")
 
         st.markdown(
