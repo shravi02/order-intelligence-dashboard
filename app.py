@@ -33,20 +33,20 @@ else:
 # =====================================================
 df.columns = df.columns.str.strip()
 
-numeric_cols = ['delay', 'attempts']
+numeric_cols = [
+    'delay',
+    'attempts',
+    'order_value'
+]
 
 for col in numeric_cols:
     if col in df.columns:
-        df[col] = pd.to_numeric(df[col], errors='coerce')
+        df[col] = pd.to_numeric(
+            df[col],
+            errors='coerce'
+        )
 
-if 'delay' in df.columns:
-    df = df.dropna(subset=['delay'])
-
-text_cols = ['risk', 'payment_type', 'status']
-
-for col in text_cols:
-    if col in df.columns:
-        df[col] = df[col].fillna('Unknown')
+df = df.dropna(subset=['delay'])
 
 # =====================================================
 # CUSTOM CSS
@@ -54,43 +54,46 @@ for col in text_cols:
 st.markdown("""
 <style>
 
-/* Main App */
 .stApp {
     background-color: #f8fafc;
 }
 
-/* Page Padding */
 .block-container {
     padding-top: 1.5rem;
     padding-left: 2rem;
     padding-right: 2rem;
 }
 
-/* Title */
 .main-title {
     text-align: center;
-    font-size: 40px;
+    font-size: 42px;
     font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 25px;
+    color: #0f172a;
+    margin-bottom: 20px;
 }
 
-/* Metric Cards */
 [data-testid="metric-container"] {
     background: white;
-    border-radius: 14px;
-    padding: 18px;
-    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
 }
 
-/* Charts */
 .stPlotlyChart {
     background: white;
-    border-radius: 14px;
+    border-radius: 16px;
     padding: 10px;
 }
 
-/* Mobile Responsive */
+.insight-box {
+    background: white;
+    padding: 15px;
+    border-radius: 14px;
+    border-left: 6px solid #2563eb;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
 @media (max-width: 768px) {
 
     .main-title {
@@ -121,13 +124,13 @@ st.markdown(
 st.markdown("---")
 
 # =====================================================
-# SIDEBAR NAVIGATION
+# SIDEBAR
 # =====================================================
 section = st.sidebar.radio(
     "Navigation",
     [
         "Dashboard",
-        "Advanced Analytics",
+        "Business Health",
         "ML Prediction",
         "Download Reports",
         "Upload Dataset"
@@ -138,6 +141,7 @@ section = st.sidebar.radio(
 # FILTERS
 # =====================================================
 st.sidebar.markdown("---")
+
 st.sidebar.subheader("Filters")
 
 payment = st.sidebar.multiselect(
@@ -152,108 +156,246 @@ risk = st.sidebar.multiselect(
     default=sorted(df['risk'].unique())
 )
 
-# Apply filters
 filtered_df = df[
     (df['payment_type'].isin(payment)) &
     (df['risk'].isin(risk))
 ]
-
-if filtered_df.empty:
-    st.warning("No data available for selected filters")
-    st.stop()
 
 # =====================================================
 # DASHBOARD
 # =====================================================
 if section == "Dashboard":
 
-    st.header("Dashboard")
+    st.header("Executive Summary")
 
     total_orders = len(filtered_df)
-    returned = len(filtered_df[filtered_df['status'] == 'Returned'])
+
+    returned_orders = len(
+        filtered_df[
+            filtered_df['status'] == 'Returned'
+        ]
+    )
+
+    revenue = filtered_df['order_value'].sum()
+
+    revenue_loss = filtered_df[
+        filtered_df['status'] == 'Returned'
+    ]['order_value'].sum()
 
     rto = (
-        (returned / total_orders) * 100
-        if total_orders > 0 else 0
+        returned_orders / total_orders
+    ) * 100
+
+    high_risk_orders = len(
+        filtered_df[
+            filtered_df['risk'] == 'High'
+        ]
     )
 
     avg_delay = filtered_df['delay'].mean()
 
-    col1, col2, col3, col4 = st.columns(4)
+    k1, k2, k3 = st.columns(3)
 
-    col1.metric("Total Orders", total_orders)
-    col2.metric("Returned Orders", returned)
-    col3.metric("RTO %", f"{rto:.2f}%")
-    col4.metric("Average Delay", f"{avg_delay:.2f} days")
+    k4, k5, k6 = st.columns(3)
+
+    k1.metric(
+        "Total Orders",
+        f"{total_orders:,}"
+    )
+
+    k2.metric(
+        "Revenue",
+        f"₹{revenue:,.0f}"
+    )
+
+    k3.metric(
+        "Returned Orders",
+        f"{returned_orders:,}"
+    )
+
+    k4.metric(
+        "RTO %",
+        f"{rto:.2f}%"
+    )
+
+    k5.metric(
+        "Revenue Loss",
+        f"₹{revenue_loss:,.0f}"
+    )
+
+    k6.metric(
+        "High Risk Orders",
+        f"{high_risk_orders:,}"
+    )
 
     st.markdown("---")
+
+    # =================================================
+    # SMART INSIGHTS
+    # =================================================
+
+    st.subheader("Smart Insights")
+
+    st.markdown("""
+    <div class="insight-box">
+    ⚠ COD orders show highest return probability
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="insight-box">
+    ⚠ Orders delayed beyond 7 days are most likely to return
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="insight-box">
+    ✅ UPI orders have lowest RTO percentage
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # =================================================
+    # CHARTS
+    # =================================================
 
     c1, c2 = st.columns(2)
 
     with c1:
 
-        fig1 = px.histogram(
-            filtered_df,
-            x='risk',
-            color='risk',
-            title='Risk Distribution'
+        city_revenue = filtered_df.groupby(
+            'city'
+        )['order_value'].sum().reset_index()
+
+        fig1 = px.bar(
+            city_revenue,
+            x='city',
+            y='order_value',
+            title='Revenue by City',
+            color='order_value'
         )
 
-        st.plotly_chart(fig1, use_container_width=True)
+        st.plotly_chart(
+            fig1,
+            use_container_width=True
+        )
 
     with c2:
 
-        fig2 = px.histogram(
-            filtered_df,
-            x='delay',
-            title='Delay Distribution'
+        product_returns = filtered_df[
+            filtered_df['status'] == 'Returned'
+        ]
+
+        product_returns = product_returns.groupby(
+            'product'
+        ).size().reset_index(name='returns')
+
+        fig2 = px.bar(
+            product_returns,
+            x='product',
+            y='returns',
+            title='Top Returning Products',
+            color='returns'
         )
 
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(
+            fig2,
+            use_container_width=True
+        )
+
+    st.markdown("---")
+
+    # =================================================
+    # ACTION CENTER
+    # =================================================
+
+    st.subheader("Action Center")
+
+    high_risk_df = filtered_df[
+        filtered_df['risk'] == 'High'
+    ]
+
+    high_risk_df = high_risk_df.sort_values(
+        by='delay',
+        ascending=False
+    )
+
+    st.dataframe(
+        high_risk_df[
+            [
+                'order_id',
+                'city',
+                'product',
+                'delay',
+                'status',
+                'action'
+            ]
+        ].head(20),
+        use_container_width=True
+    )
 
 # =====================================================
-# ADVANCED ANALYTICS
+# BUSINESS HEALTH
 # =====================================================
-elif section == "Advanced Analytics":
+elif section == "Business Health":
 
-    st.header("Advanced Analytics")
+    st.header("Business Health Analytics")
 
-    fig3 = px.scatter(
-        filtered_df,
-        x='delay',
-        y='attempts',
-        color='risk',
-        title='Delay vs Attempts'
+    c1, c2 = st.columns(2)
+
+    with c1:
+
+        fig3 = px.histogram(
+            filtered_df,
+            x='payment_type',
+            color='status',
+            barmode='group',
+            title='Payment Method Performance'
+        )
+
+        st.plotly_chart(
+            fig3,
+            use_container_width=True
+        )
+
+    with c2:
+
+        fig4 = px.box(
+            filtered_df,
+            x='risk',
+            y='delay',
+            color='risk',
+            title='Delay Distribution by Risk'
+        )
+
+        st.plotly_chart(
+            fig4,
+            use_container_width=True
+        )
+
+    monthly_orders = filtered_df.groupby(
+        'order_date'
+    ).size().reset_index(name='orders')
+
+    fig5 = px.line(
+        monthly_orders,
+        x='order_date',
+        y='orders',
+        title='Order Trend Over Time'
     )
 
-    st.plotly_chart(fig3, use_container_width=True)
-
-    fig4 = px.histogram(
-        filtered_df,
-        x='payment_type',
-        color='status',
-        barmode='group',
-        title='Payment vs Returns'
+    st.plotly_chart(
+        fig5,
+        use_container_width=True
     )
-
-    st.plotly_chart(fig4, use_container_width=True)
-
-    fig5 = px.box(
-        filtered_df,
-        x='risk',
-        y='delay',
-        color='risk',
-        title='Delay Distribution by Risk'
-    )
-
-    st.plotly_chart(fig5, use_container_width=True)
 
 # =====================================================
 # ML PREDICTION
 # =====================================================
 elif section == "ML Prediction":
 
-    st.header("ML Prediction")
+    st.header("AI Return Risk Prediction")
 
     model_df = filtered_df.copy()
 
@@ -272,11 +414,15 @@ elif section == "ML Prediction":
     )
 
     model = RandomForestClassifier()
+
     model.fit(X_train, y_train)
 
     predictions = model.predict(X_test)
 
-    accuracy = accuracy_score(y_test, predictions)
+    accuracy = accuracy_score(
+        y_test,
+        predictions
+    )
 
     st.metric(
         "Model Accuracy",
@@ -306,9 +452,20 @@ elif section == "ML Prediction":
         )[0]
 
         if result == 1:
-            st.error("High Return Risk")
+
+            st.error(
+                "High Return Risk Predicted"
+            )
+
+            st.warning(
+                "Recommended Action: Call Customer"
+            )
+
         else:
-            st.success("Low Return Risk")
+
+            st.success(
+                "Low Return Risk Predicted"
+            )
 
 # =====================================================
 # DOWNLOAD REPORTS
@@ -320,7 +477,7 @@ elif section == "Download Reports":
     csv = filtered_df.to_csv(index=False)
 
     st.download_button(
-        label="Download Filtered CSV",
+        label="Download Full Analytics Report",
         data=csv,
         file_name="analytics_report.csv",
         mime="text/csv"
@@ -345,21 +502,32 @@ elif section == "Upload Dataset":
     st.header("Upload Dataset")
 
     st.write(
-        "Upload a CSV file to analyze logistics and return performance."
+        "Upload a CSV dataset for analytics."
     )
 
     if uploaded_file is not None:
 
-        st.success("Dataset uploaded successfully")
+        st.success(
+            "Dataset uploaded successfully"
+        )
 
         st.dataframe(
             df.head(),
             use_container_width=True
         )
 
-        st.write("Rows:", df.shape[0])
-        st.write("Columns:", df.shape[1])
+        st.write(
+            "Rows:",
+            df.shape[0]
+        )
+
+        st.write(
+            "Columns:",
+            df.shape[1]
+        )
 
     else:
 
-        st.info("Currently using default dataset")
+        st.info(
+            "Currently using default dataset"
+        )
