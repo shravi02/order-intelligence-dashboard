@@ -163,12 +163,13 @@ elif authentication_status:
             ]
         )
 
-    st.markdown("---")
+    
 
     st.caption(
 
         "Logistics Intelligence System • AI-Powered Operational Analytics Platform"
     )
+    st.markdown("---")
     # =================================================
     # FILTERS
     # =================================================
