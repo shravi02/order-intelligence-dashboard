@@ -117,7 +117,7 @@ elif authentication_status:
     # HEADER
     # =================================================
     st.markdown('''<div class="main-title">Logistics Intelligence System</div>''', unsafe_allow_html=True)
-    st.markdown("---")
+    
 
     # =================================================
     # SIDEBAR NAVIGATION
