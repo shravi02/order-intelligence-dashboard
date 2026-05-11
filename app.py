@@ -418,27 +418,28 @@ elif authentication_status:
         delay_input       = st.slider("Delivery Delay",   0,   15,   5)
         attempts_input    = st.slider("Delivery Attempts", 1,    5,   2)
         order_value_input = st.slider("Order Value",     200, 5000, 1500)
+        if st.button("Predict Return Risk"):
 
-	if st.button("Predict Return Risk"):
+            input_data = pd.DataFrame(
+                0,
+                index=[0],
+                columns=X.columns
+            )
 
-	    input_data = pd.DataFrame(
-	        0,
-	        index=[0],
-	        columns=X.columns
-	    )
+            input_data["delay"] = delay_input
+            input_data["attempts"] = attempts_input
+            input_data["order_value"] = order_value_input
 
-	    input_data["delay"] = delay_input
-	    input_data["attempts"] = attempts_input
-	    input_data["order_value"] = order_value_input
+            result = rf_model.predict(input_data)[0]
 
-	    result = rf_model.predict(input_data)[0]
             if result == 1:
                 st.error("High Return Risk Predicted")
                 st.warning("Recommended Action: Call Customer")
+
             else:
                 st.success("Low Return Risk Predicted")
                 st.info("Recommended Action: Normal Delivery")
-
+   
     # =================================================
     # FORECASTING
     # =================================================
